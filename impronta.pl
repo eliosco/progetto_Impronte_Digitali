@@ -151,4 +151,7 @@ readInt16(IS, Number) :-
     get_byte(IS, B1),
     Number is B0 + B1<<8.
 
-
+colorapixel([]).
+colorapixel([H|T]) :-
+	send(H,colour,colour(red)),
+	colorapixel(T).
