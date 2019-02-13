@@ -64,6 +64,86 @@ biforcazione(Bif) :-
         send(Ref,colour,colour(red)),
 	colorapixel(Bif).
 
+laghi(T) :-
+	findall(Lag,lago(Lag),Laghi),
+	length(Laghi,T).
+
+lago(VRef1) :-
+	a(X,Y,Ref1),
+	a(W,Z,Ref2),
+	lag(X,Y,VRef1,W,Z,VRef2),
+        send(Ref1,colour,colour(red)),
+	send(Ref2,colour,colour(red)),
+	colorapixel(VRef1),
+	colorapixel(VRef2).
+
+
+lag(X,Y,VRef1,W,Z,VRef2) :-
+	semilago_nord(X,Y,VRef1),
+	semilago_sud(W,Z,VRef2),
+	distanza(X,Y,W,Z,Dist_oriz,Dist_vert),
+	Dist_oriz =< 5,
+	Dist_vert =< 20
+	;
+	semilago_ovest(X,Y,VRef1),
+	semilago_est(W,Z,VRef2),
+	distanza(X,Y,W,Z,Dist_oriz,Dist_vert),
+	Dist_oriz =< 20,
+	Dist_vert =< 5.
+
+distanza(X,Y,W,Z,Dist_oriz,Dist_vert) :-
+	Dist_oriz  is abs(X-W),
+	Dist_vert is abs(Y-Z).
+
+semilago_sud(X,Y,VRef) :-
+	X1 is X-1,
+	Y1 is Y-1,
+	a(X1,Y1,Ref1),
+	X3 is X+1,
+	Y3 is Y-1,
+	a(X3,Y3,Ref2),
+	X8 is X,
+	Y8 is Y+1,
+	a(X8,Y8,Ref3),
+	VRef = [Ref1,Ref2,Ref3].
+
+semilago_nord(X,Y,VRef) :-
+	X2 is X,
+	Y2 is Y-1,
+	a(X2,Y2,Ref1),
+	X7 is X-1,
+	Y7 is Y+1,
+	a(X7,Y7,Ref2),
+	X9 is X+1,
+	Y9 is Y+1,
+        a(X9,Y9,Ref3),
+        VRef = [Ref1,Ref2,Ref3].
+
+semilago_est(X,Y,VRef) :-
+	X1 is X-1,
+	Y1 is Y-1,
+	a(X1,Y1,Ref1),
+	X6 is X+1,
+	Y6 is Y,
+	a(X6,Y6,Ref2),
+	X7 is X-1,
+	Y7 is Y+1,
+	a(X7,Y7,Ref3),
+	VRef = [Ref1,Ref2,Ref3].
+
+semilago_ovest(X,Y,VRef) :-
+	X3 is X+1,
+	Y3 is Y-1,
+	a(X3,Y3,Ref1),
+	X4 is X-1,
+	Y4 is Y,
+	a(X4,Y4,Ref2),
+	X9 is X+1,
+	Y9 is Y+1,
+	a(X9,Y9,Ref3),
+	VRef = [Ref1,Ref2,Ref3].
+
+
 %pattern 1
 bif(X,Y,Bif) :-
 	%a(X,Y,Ref0),
@@ -259,5 +339,10 @@ controllo_4connection_neighbors([v(Xv,Yv)|Coda]):-
 	%length(ListaSottoVicini,LunghezzaSotto),
 	%LunghezzaSotto > 3,
         controllo_4connection_neighbors(Coda).
+
+eliminatutto :-
+	a(X,Y,Ref),
+	retract(a(X,Y,Ref)),
+	free(Ref).
 
 

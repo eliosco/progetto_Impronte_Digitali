@@ -159,3 +159,9 @@ colorapixel([]).
 colorapixel([H|T]) :-
 	send(H,colour,colour(red)),
 	colorapixel(T).
+
+
+
+
+
+
