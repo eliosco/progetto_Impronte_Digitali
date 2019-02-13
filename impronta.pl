@@ -20,8 +20,8 @@ disegna_impronta(FileName, Finestra) :- % FileName e Finestra istanziati
 	send(Finestra, open), % apre finestra
 	esamina_bmp(FileName,Stream,DimensioneImmagine,Larghezza),
 	carica_bmp(Finestra,Stream,DimensioneImmagine,Larghezza),
-	riempi_spazi_bianchi(Finestra), %predicato per inserire pixel mancanti
-        cancella_pixel_errati(Finestra). %predicato per cancellare i pixel errati
+	riempi_spazi_bianchi(Finestra). %predicato per inserire pixel mancanti
+       % cancella_pixel_errati(Finestra). %predicato per cancellare i pixel errati
 
 % visualizza a schermo i parametri del file.bmp caricato e restituisce:
 % IS: stream di input associato al FileName
