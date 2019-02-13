@@ -1,3 +1,4 @@
+
 /*
  * Titolo:       impronta
  * Autore:       Aldo Franco Dragoni
@@ -18,7 +19,9 @@ disegna_impronta(FileName, Finestra) :- % FileName e Finestra istanziati
 	send(Finestra, size, size(600, 800)), % ne specifica dimensione
 	send(Finestra, open), % apre finestra
 	esamina_bmp(FileName,Stream,DimensioneImmagine,Larghezza),
-	carica_bmp(Finestra,Stream,DimensioneImmagine,Larghezza).
+	carica_bmp(Finestra,Stream,DimensioneImmagine,Larghezza),
+	riempi_spazi_bianchi(Finestra), %predicato per inserire pixel mancanti
+        cancella_pixel_errati(Finestra). %predicato per cancellare i pixel errati
 
 % visualizza a schermo i parametri del file.bmp caricato e restituisce:
 % IS: stream di input associato al FileName
@@ -103,6 +106,7 @@ carica_impronta(Finestra,Stream,PosIn,PosFin,Larghezza,LarghezzaInBytesRigaImmag
 	Pos is PosIn + 1,
 	processa(Finestra,Byte,128,Larghezza,X0,Y0,X,Y), % genera i fatti a(X,Y,Ref) e disegna i corrispondenti oggetti
         carica_impronta(Finestra,Stream,Pos,PosFin,Larghezza,LarghezzaInBytesRigaImmagine,LarghezzaInBytesRigaFile,X,Y).
+
 carica_impronta(Finestra,Stream,PosIn,PosFin,Larghezza,LarghezzaInBytesRigaImmagine,LarghezzaInBytesRigaFile,X,Y) :-
 	get_byte(Stream, _),
 	Pos is PosIn + 1,
