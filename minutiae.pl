@@ -207,3 +207,55 @@ controllo_4connection_neighbors([v(Xv,Yv)|Coda]):-
 	%length(ListaSottoVicini,LunghezzaSotto),
 	%LunghezzaSotto > 3,
         controllo_4connection_neighbors(Coda).
+
+%pattern17
+bif(X, Y, Ref):-
+    X3 is X+1,
+    Y3 is Y-1,
+    a(X3,Y3, Ref),
+    X4 is X-1,
+    Y4 is Y,
+    a(X4,Y4,Ref),
+    a(X,Y,Ref),
+    X8 is X,
+    Y8 is Y+1,
+    a(X8,Y8,Ref).
+
+%pattern18
+bif(X, Y, Ref):-
+    X2 is X,
+    Y2 is Y-1,
+    a(X2,Y2,Ref),
+    a(X,Y,Ref),
+    X6 is X+1,
+    Y6 is Y,
+    a(X6,Y6,Ref),
+    X7 is X-1,
+    Y7 is Y+1,
+    a(X7,Y7,Ref).
+
+%pattern19
+bif(X, Y, Ref):-
+    X2 is X,
+    Y2 is Y-1,
+    a(X2,Y2,Ref),
+    X4 is X-1,
+    Y4 is Y,
+    a(X4,Y4,Ref),
+    a(X,Y,Ref),
+    X9 is X+1,
+    Y9 is Y+1,
+    a(X9,Y9,Ref).
+
+%pattern20
+bif(X, Y, Ref):-
+    X1 is X-1,
+    Y1 is Y-1,
+    a(X1,Y1,Ref),
+    a(X,Y,Ref),
+    X6 is X+1,
+    Y6 is Y,
+    a(X6,Y6,Ref),
+    X8 is X,
+    Y8 is Y+1,
+    a(X8,Y8,Ref).
