@@ -557,8 +557,30 @@ bif(X, Y, Bif):-
 	a(X9, Y9, Ref3),
 	Bif = [Ref1,Ref2,Ref3].
 
-
-
+%pattern15, riferimento X8-Y8
+bif(X, Y, Bif):-
+	X1 is X-1,
+	Y1 is Y-2,
+	X4 is X-1,
+	Y4 is Y-1,
+	X6 is X+1,
+	Y6 is Y-1,
+	a(X1, Y1, Ref1),
+	a(X4, Y4, Ref2),
+	a(X6, Y6, Ref3),
+	Bif = [Ref1,Ref2,Ref3].
+%pattern16, riferimento X8-Y8
+bif(X, Y, Bif):-
+	X3 is X+1,
+	Y3 is Y-2,
+	X4 is X-1,
+	Y4 is Y-1,
+	X6 is X+1,
+	Y6 is Y-1,
+	a(X3, Y3, Ref1),
+	a(X4, Y4, Ref2),
+	a(X6, Y6, Ref3),
+	Bif = [Ref1,Ref2,Ref3].
 
 eliminatutto :-
 	a(X,Y,Ref),
