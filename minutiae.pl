@@ -514,7 +514,7 @@ bif(X, Y, Bif):-
 	X8 is X,
 	Y8 is Y+2,
 	a(X3, Y3, Ref1),
-	a(X4, Y8, Ref2),
+	a(X4, Y4, Ref2),
 	a(X8, Y8, Ref3),
 	Bif = [Ref1,Ref2,Ref3].
 
