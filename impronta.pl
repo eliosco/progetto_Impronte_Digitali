@@ -177,3 +177,14 @@ colorapixel(Ref,Colore) :-
 
 
 
+
+
+
+
+
+
+
+
+
+
+

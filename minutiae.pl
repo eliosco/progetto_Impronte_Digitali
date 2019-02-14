@@ -310,6 +310,103 @@ bif(X,Y,Bif) :-
 	Y9 is Y+1,
 	a(X9,Y9,Ref3),
 	Bif = [Ref1,Ref2,Ref3].
+
+%pattern 5 pixel_riferimento=4
+bif(X,Y,Bif) :-
+	%X1 is X,
+	%Y1 is Y-1,
+	X2 is X+1,
+	Y2 is Y-1,
+	a(X2,Y2,Ref1),
+	%X3 is X+2,
+	%Y3 is Y-1,
+	%X4 is X,
+	%Y4 is Y,
+	%X5 is X+1,
+	%Y5 is Y,
+	X6 is X+2,
+	Y6 is Y,
+	a(X6,Y6,Ref2),
+	%X7 is X,
+	%Y7 is Y-1,
+	%X8 is X+1,
+	%Y8 is Y+1,
+	%X9 is X+2,
+	%Y9 is Y+1,
+	Bif = [Ref1,Ref2].
+
+%pattern 6 riferimento_pixel=4
+bif(X,Y,Bif) :-
+	%X1 is X,
+	%Y1 is Y-1,
+	%X2 is X+1,
+	%Y2 is Y-1,
+	%X3 is X+2,
+	%Y3 is Y-1,
+	%X4 is X,
+	%Y4 is Y,
+	%X5 is X+1,
+	%Y5 is Y,
+	X6 is X+2,
+	Y6 is Y,
+	a(X6,Y6,Ref1),
+	%X7 is X,
+	%Y7 is Y-1,
+	X8 is X+1,
+	a(X8,Y8,Ref2),
+	Y8 is Y+1,
+	%X9 is X+2,
+	%Y9 is Y+1,
+	Bif = [Ref1,Ref2].
+
+%pattern 7 riferimenti_pixel=4
+bif(X,Y,Bif) :-
+	%X1 is X,
+	%Y1 is Y-1,
+	X2 is X+1,
+	Y2 is Y-1,
+	a(X2,Y2,Ref1),
+	%X3 is X+2,
+	%Y3 is Y-1,
+	%X4 is X,
+	%Y4 is Y,
+	%X5 is X+1,
+	%Y5 is Y,
+	%X6 is X+2,
+	%Y6 is Y,
+	%X7 is X,
+	%Y7 is Y-1,
+	X8 is X+1,
+	Y8 is Y+1,
+	a(X8,Y8,Ref2),
+	%X9 is X+2,
+	%Y9 is Y+1,
+	Bif = [Ref1,Ref2].
+
+%pattern 8 riferimenti_pixel=6
+bif(X,Y,Bif) :-
+	%X1 is X-2,
+	%Y1 is Y-1,
+	X2 is X-1,
+	Y2 is Y-1,
+	a(X2,Y2,Ref1),
+	%X3 is X,
+	%Y3 is Y-1,
+	%X4 is X-2,
+	%Y4 is Y,
+	%X5 is X-1,
+	%Y5 is Y,
+	%X6 is X,
+	%Y6 is Y,
+	%X7 is X-2,
+	%Y7 is Y+1,
+	X8 is X-1,
+	Y8 is Y+1,
+	a(X8,Y8,Ref2),
+	%X9 is X,
+	%Y9 is Y+1,
+	Bif = [Ref1,Ref2].
+
 /*
 %pattern17
 bif(X, Y, Bif):-
@@ -368,3 +465,16 @@ eliminatutto :-
 	a(X,Y,Ref),
 	retract(a(X,Y,Ref)),
 	free(Ref).
+
+
+
+
+
+
+
+
+
+
+
+
+
