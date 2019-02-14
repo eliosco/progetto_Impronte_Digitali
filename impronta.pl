@@ -16,7 +16,7 @@
 % ?- disegna_impronta('fingprintbin.bmp', @a).
 disegna_impronta(FileName, Finestra) :- % FileName e Finestra istanziati
 	new(Finestra, picture('Impronta Digitale')), % genera finestra
-	send(Finestra, size, size(600, 800)), % ne specifica dimensione
+	send(Finestra, size, size(600 , 800)), % ne specifica dimensione
 	send(Finestra, open), % apre finestra
 	esamina_bmp(FileName,Stream,DimensioneImmagine,Larghezza),
 	carica_bmp(Finestra,Stream,DimensioneImmagine,Larghezza),
@@ -133,9 +133,9 @@ processa(_,_,_,Larghezza,Xc,Yc,1,Y) :-
 processa(Finestra,Numero,Base,Larghezza,Xc,Yc,X,Y) :-
 	A is (Numero /\ Base)/Base,
 	(   A==0, !,
-	    XC is Xc*2, YC is Yc*2,
-	    new(Ref, box(2,2)),
-	    send(Ref, colour, colour(black)),
+	    XC is Xc*4, YC is Yc*4,
+	    new(Ref, box(4,4)),
+	    send(Ref, fill_pattern, colour(black)),
 	    send(Finestra,display,Ref,point(XC,YC)),
 	    assert(a(Xc,Yc,Ref))
 	;
@@ -157,7 +157,23 @@ readInt16(IS, Number) :-
     get_byte(IS, B1),
     Number is B0 + B1<<8.
 
-colorapixel([]).
-colorapixel([H|T]) :-
+colora_lista([]).
+colora_lista([H|T]) :-
 	send(H,colour,colour(red)),
-	colorapixel(T).
+	send(H,fill_pattern,colour(red)),
+	colora_lista(T).
+/*
+colorapixel(Ref,Colore) :-
+	send(Ref, colour, colour(Colore)),
+	send(Ref, fillpattern, colour(Colore)).
+*/
+
+
+
+
+
+
+
+
+
+

@@ -73,10 +73,11 @@ cerca_spazi_bianchi_orizzontali(X,Y,Ref,Finestra):-
 	\+ a(XBianco,YUp,_),
 	\+ a(XBianco,YDown,_),
 	\+ a(XBianco,Y,_),
-	new(Ref1, box(2,2)),
+	new(Ref1, box(4,4)),
 	assert(a(XBianco,Y,Ref1)),
 	send(Ref1,colour,colour(black)),
-	send(Finestra,display,Ref1,point((XBianco*2),(Y*2))).
+	send(Ref1,fill_pattern,colour(black)),
+	send(Finestra,display,Ref1,point((XBianco*4),(Y*4))).
 
 cerca_spazi_bianchi_verticali(X,Y,Ref,Finestra):-
 	a(X,Y,Ref),
@@ -92,10 +93,11 @@ cerca_spazi_bianchi_verticali(X,Y,Ref,Finestra):-
 	\+ a(XSx,YBianco,_),
 	\+ a(XDx,YBianco,_),
 	\+ a(X,YBianco,_),
-	new(Ref2, box(2,2)),
+	new(Ref2, box(4,4)),
 	assert(a(X,YBianco,Ref2)),
 	send(Ref2,colour,colour(black)),
-	send(Finestra,display,Ref2,point((X*2),(YBianco*2))).
+	send(Ref2,fill_pattern,colour(black)),
+	send(Finestra,display,Ref2,point((X*4),(YBianco*4))).
 
 
 % cancellazione dei pixel errati cioè di quei pixel che hanno un numero
@@ -113,6 +115,7 @@ trova_pixel_errati(X,Y,Ref,_):-
 	length(Prova,Lungh),
 	Lungh > 2,
 	send(Ref,colour,colour(white)),
+	send(Ref,fill_pattern,colour(white)),
 	retract(a(X,Y,_)).
 
 controllo_4connection_neighbors([],[]).
@@ -138,6 +141,7 @@ trova_pixel_errati_3(X,Y,Ref,_):-
 	length(Prova,Lungh),
 	Lungh > 2,
 	send(Ref,colour,colour(white)),
+	send(Ref,fill_pattern,colour(white)),
 	retract(a(X,Y,_)).
 	%colora_pixel(ListaVicini,Finestra).
 
@@ -159,7 +163,87 @@ biforcazione(Bif) :-
 	a(X,Y,Ref),
 	bif(X,Y,Bif),
         send(Ref,colour,colour(red)),
-	colorapixel(Bif).
+	colora_lista(Bif).
+
+laghi(T) :-
+	findall(Lag,lago(Lag),Laghi),
+	length(Laghi,T).
+
+lago(VRef1) :-
+	a(X,Y,Ref1),
+	a(W,Z,Ref2),
+	lag(X,Y,VRef1,W,Z,VRef2),
+        send(Ref1,colour,colour(red)),
+	send(Ref2,colour,colour(red)),
+	colora_lista(VRef1),
+	colora_lista(VRef2).
+
+
+lag(X,Y,VRef1,W,Z,VRef2) :-
+	semilago_nord(X,Y,VRef1),
+	semilago_sud(W,Z,VRef2),
+	distanza(X,Y,W,Z,Dist_oriz,Dist_vert)
+	%Dist_oriz =< 5,
+	%Dist_vert =< 20
+	;
+	semilago_ovest(X,Y,VRef1),
+	semilago_est(W,Z,VRef2),
+	distanza(X,Y,W,Z,Dist_oriz,Dist_vert).
+	%Dist_oriz =< 20,
+	%Dist_vert =< 5.
+
+distanza(X,Y,W,Z,Dist_oriz,Dist_vert) :-
+	Dist_oriz  is abs(X-W),
+	Dist_vert is abs(Y-Z).
+
+semilago_sud(X,Y,VRef) :-
+	X1 is X-1,
+	Y1 is Y-1,
+	a(X1,Y1,Ref1),
+	X3 is X+1,
+	Y3 is Y-1,
+	a(X3,Y3,Ref2),
+	X8 is X,
+	Y8 is Y+1,
+	a(X8,Y8,Ref3),
+	VRef = [Ref1,Ref2,Ref3].
+
+semilago_nord(X,Y,VRef) :-
+	X2 is X,
+	Y2 is Y-1,
+	a(X2,Y2,Ref1),
+	X7 is X-1,
+	Y7 is Y+1,
+	a(X7,Y7,Ref2),
+	X9 is X+1,
+	Y9 is Y+1,
+        a(X9,Y9,Ref3),
+        VRef = [Ref1,Ref2,Ref3].
+
+semilago_est(X,Y,VRef) :-
+	X1 is X-1,
+	Y1 is Y-1,
+	a(X1,Y1,Ref1),
+	X6 is X+1,
+	Y6 is Y,
+	a(X6,Y6,Ref2),
+	X7 is X-1,
+	Y7 is Y+1,
+	a(X7,Y7,Ref3),
+	VRef = [Ref1,Ref2,Ref3].
+
+semilago_ovest(X,Y,VRef) :-
+	X3 is X+1,
+	Y3 is Y-1,
+	a(X3,Y3,Ref1),
+	X4 is X-1,
+	Y4 is Y,
+	a(X4,Y4,Ref2),
+	X9 is X+1,
+	Y9 is Y+1,
+	a(X9,Y9,Ref3),
+	VRef = [Ref1,Ref2,Ref3].
+
 
 %pattern 1
 bif(X,Y,Bif) :-
@@ -215,33 +299,57 @@ bif(X,Y,Bif) :-
 	a(X9,Y9,Ref3),
 	Bif = [Ref1,Ref2,Ref3].
 
-
-
 %pattern17
-bif(X, Y, Ref):-
+bif(X, Y, Bif):-
     X3 is X+1,
     Y3 is Y-1,
-    a(X3,Y3, Ref),
+    a(X3,Y3, Ref1),
     X4 is X-1,
     Y4 is Y,
-    a(X4,Y4,Ref),
-    a(X,Y,Ref),
+    a(X4,Y4,Ref2),
     X8 is X,
     Y8 is Y+1,
-    a(X8,Y8,Ref).
+    a(X8,Y8,Ref3),
+    Bif = [Ref1,Ref2,Ref3].
 
 %pattern18
-bif(X, Y, Ref):-
+bif(X, Y, Bif):-
     X2 is X,
     Y2 is Y-1,
-    a(X2,Y2,Ref),
-    a(X,Y,Ref),
+    a(X2,Y2,Ref1),
     X6 is X+1,
     Y6 is Y,
-    a(X6,Y6,Ref),
+    a(X6,Y6,Ref2),
     X7 is X-1,
     Y7 is Y+1,
-    a(X7,Y7,Ref).
+    a(X7,Y7,Ref3),
+    Bif = [Ref1,Ref2,Ref3].
+
+%pattern19
+bif(X, Y, Bif):-
+    X2 is X,
+    Y2 is Y-1,
+    a(X2,Y2,Ref1),
+    X4 is X-1,
+    Y4 is Y,
+    a(X4,Y4,Ref2),
+    X9 is X+1,
+    Y9 is Y+1,
+    a(X9,Y9,Ref3),
+    Bif = [Ref1,Ref2,Ref3].
+
+%pattern20
+bif(X, Y, Bif):-
+    X1 is X-1,
+    Y1 is Y-1,
+    a(X1,Y1,Ref1),
+    X6 is X+1,
+    Y6 is Y,
+    a(X6,Y6,Ref2),
+    X8 is X,
+    Y8 is Y+1,
+    a(X8,Y8,Ref3),
+    Bif = [Ref1,Ref2,Ref3].
 
 %pattern19
 bif(X, Y, Ref):-
@@ -269,3 +377,7 @@ bif(X, Y, Ref):-
     Y8 is Y+1,
     a(X8,Y8,Ref).
 
+eliminatutto :-
+	a(X,Y,Ref),
+	retract(a(X,Y,Ref)),
+	free(Ref).
