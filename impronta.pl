@@ -23,7 +23,8 @@ disegna_impronta(FileName, Finestra) :- % FileName e Finestra istanziati
         cancella_pixel_errati(Finestra),
 	riempi_spazi_bianchi(Finestra),
 	cancella_pixel_errati_3(Finestra),
-	riempi_spazi_bianchi(Finestra). %predicato per cancellare i pixel errati
+	riempi_spazi_bianchi(Finestra),
+	riempi_spazi_bianchi2(Finestra). %predicato per cancellare i pixel errati
 
 % visualizza a schermo i parametri del file.bmp caricato e restituisce:
 % IS: stream di input associato al FileName

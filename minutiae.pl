@@ -59,13 +59,19 @@ riempi_spazi_bianchi(Finestra):-
 	findall(v(X,Y),cerca_spazi_bianchi_orizzontali(X,Y,_, Finestra),_),
 	findall(v(X,Y),cerca_spazi_bianchi_verticali(X,Y,_, Finestra),_).
 
+riempi_spazi_bianchi2(Finestra):-
+	findall(v(X,Y),cerca_spazi_bianchi_diagonali_alto_sx(X,Y,_, Finestra),_),
+	findall(v(X,Y),cerca_spazi_bianchi_diagonali_alto_dx(X,Y,_, Finestra),_),
+	findall(v(X,Y),cerca_spazi_bianchi_diagonali_basso_sx(X,Y,_, Finestra),_),
+	findall(v(X,Y),cerca_spazi_bianchi_diagonali_basso_dx(X,Y,_, Finestra),_).
+
+
+
 cerca_spazi_bianchi_orizzontali(X,Y,Ref,Finestra):-
 	a(X,Y,Ref),
 	Xdx is (X+2),
 	YUp is (Y-1),
 	YDown is (Y+1),
-	Y2Up is (Y-2),
-	Y2Down is (Y+2),
 	(a(Xdx,Y,_)
 	;
 	a(Xdx,YUp,_)
@@ -101,6 +107,114 @@ cerca_spazi_bianchi_verticali(X,Y,Ref,Finestra):-
 	send(Ref2,fill_pattern,colour(black)),
 	send(Finestra,display,Ref2,point((X*4),(YBianco*4))).
 
+cerca_spazi_bianchi_diagonali_alto_dx(X,Y,Ref,Finestra):-
+	a(X,Y,Ref),
+	X1 is (X+1),
+	XS1 is (X-1),
+	X2 is (X+2),
+	Y2Up is (Y+2),
+	YUp is (Y+1),
+	YDown is (Y-1),
+	a(X2,Y2Up,_),
+	%\+ a(XS1,YUp,_),
+	\+ a(XS1,Y2Up,_),
+	\+ a(X,YUp,_),
+	\+ a(X,Y2Up,_),
+	\+ a(X1,Y2Up,_),
+	\+ a(X1,YUp,_),
+	%\+ a(X1,YDown,_),
+	%\+ a(X1,Y,_),
+	\+ a(X2,YUp,_),
+	\+ a(X2,YDown,_),
+	\+ a(X2,Y,_),
+	new(Ref1, box(4,4)),
+	assert(a(X1,YUp,Ref1)),
+	send(Ref1,colour,colour(red)),
+	send(Ref1,fill_pattern,colour(red)),
+	send(Ref,colour,colour(yellow)),
+	send(Finestra,display,Ref1,point((X1*4),(YUp*4))).
+
+cerca_spazi_bianchi_diagonali_alto_sx(X,Y,Ref,Finestra):-
+	a(X,Y,Ref),
+	X1 is (X-1),
+	X2 is (X-2),
+	XD1 is (X+1),
+	Y2Up is (Y+2),
+	YUp is (Y+1),
+	YDown is (Y-1),
+	a(X2,Y2Up,_),
+	%\+ a(XD1,YUp,_),
+	\+ a(XD1,Y2Up,_),
+	\+ a(X,YUp,_),
+	\+ a(X,Y2Up,_),
+	\+ a(X1,Y2Up,_),
+	\+ a(X1,YUp,_),
+	%\+ a(X1,YDown,_),
+	%\+ a(X1,Y,_),
+	\+ a(X2,YUp,_),
+	\+ a(X2,YDown,_),
+	\+ a(X2,Y,_),
+	new(Ref1, box(4,4)),
+	assert(a(X1,YUp,Ref1)),
+	send(Ref1,colour,colour(red)),
+	send(Ref1,fill_pattern,colour(red)),
+	send(Ref,colour,colour(yellow)),
+	send(Finestra,display,Ref1,point((X1*4),(YUp*4))).
+
+
+cerca_spazi_bianchi_diagonali_basso_sx(X,Y,Ref,Finestra):-
+	a(X,Y,Ref),
+	X1 is (X-1),
+	X2 is (X-2),
+	XD1 is (X+1),
+	Y2Down is (Y-2),
+	YUp is (Y+1),
+	YDown is (Y-1),
+	a(X2,Y2Down,_),
+	%\+ a(XD1,YDown,_),
+	\+ a(XD1,Y2Down,_),
+	\+ a(X,YDown,_),
+	\+ a(X,Y2Down,_),
+	\+ a(X1,Y2Down,_),
+	%\+ a(X1,YUp,_),
+	\+ a(X1,YDown,_),
+	%\+ a(X1,Y,_),
+	\+ a(X2,YUp,_),
+	\+ a(X2,YDown,_),
+	\+ a(X2,Y,_),
+	new(Ref1, box(4,4)),
+	assert(a(X1,YDown,Ref1)),
+	send(Ref1,colour,colour(red)),
+	send(Ref1,fill_pattern,colour(red)),
+	send(Ref,colour,colour(yellow)),
+	send(Finestra,display,Ref1,point((X1*4),(YDown*4))).
+
+cerca_spazi_bianchi_diagonali_basso_dx(X,Y,Ref,Finestra):-
+	a(X,Y,Ref),
+	X1 is (X+1),
+	X2 is (X+2),
+	XS1 is (X-1),
+	Y2Down is (Y-2),
+	YUp is (Y+1),
+	YDown is (Y-1),
+	a(X2,Y2Down,_),
+	%\+ a(XS1,YDown,_),
+	\+ a(XS1,Y2Down,_),
+	\+ a(X,YDown,_),
+	\+ a(X,Y2Down,_),
+	\+ a(X1,Y2Down,_),
+	%\+ a(X1,YUp,_),
+	\+ a(X1,YDown,_),
+	%\+ a(X1,Y,_),
+	\+ a(X2,YUp,_),
+	\+ a(X2,YDown,_),
+	\+ a(X2,Y,_),
+	new(Ref1, box(4,4)),
+	assert(a(X1,YDown,Ref1)),
+	send(Ref1,colour,colour(red)),
+	send(Ref1,fill_pattern,colour(red)),
+	send(Ref,colour,colour(yellow)),
+	send(Finestra,display,Ref1,point((X1*4),(YDown*4))).
 
 % cancellazione dei pixel errati cioè di quei pixel che hanno un numero
 % strettamente maggiore di pixel vicini i quali hanno a loro volta 4
