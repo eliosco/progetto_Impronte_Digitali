@@ -64,6 +64,8 @@ cerca_spazi_bianchi_orizzontali(X,Y,Ref,Finestra):-
 	Xdx is (X+2),
 	YUp is (Y-1),
 	YDown is (Y+1),
+	Y2Up is (Y-2),
+	Y2Down is (Y+2),
 	(a(Xdx,Y,_)
 	;
 	a(Xdx,YUp,_)
