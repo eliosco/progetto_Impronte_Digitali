@@ -252,6 +252,9 @@ bif(X,Y,Bif) :-
 	%a(X,Y,Ref0),
 	X1 is X-1,
 	Y1 is Y-1,
+	X2 is X,
+	Y2 is Y-1,
+	\+ a(X2,Y2,_),
 	a(X1,Y1,Ref1),
 	X3 is X+1,
 	Y3 is Y-1,
@@ -270,6 +273,9 @@ bif(X,Y,Bif) :-
 	X7 is X-1,
 	Y7 is Y+1,
 	a(X7,Y7,Ref2),
+	X8 is X,
+	Y8 is Y+1,
+	\+ a(X8,Y8,_),
 	X9 is X+1,
 	Y9 is Y+1,
         a(X9,Y9,Ref3),
@@ -280,6 +286,9 @@ bif(X,Y,Bif) :-
 	X1 is X-1,
 	Y1 is Y-1,
 	a(X1,Y1,Ref1),
+	X4 is X-1,
+	Y4 is Y,
+	\+ a(X4,Y4,_),
 	X6 is X+1,
 	Y6 is Y,
 	a(X6,Y6,Ref2),
@@ -296,11 +305,14 @@ bif(X,Y,Bif) :-
 	X4 is X-1,
 	Y4 is Y,
 	a(X4,Y4,Ref2),
+	X6 is X+1,
+	Y6 is Y,
+	\+ a(X6,Y6,_),
 	X9 is X+1,
 	Y9 is Y+1,
 	a(X9,Y9,Ref3),
 	Bif = [Ref1,Ref2,Ref3].
-
+/*
 %pattern17
 bif(X, Y, Bif):-
     X3 is X+1,
@@ -352,32 +364,7 @@ bif(X, Y, Bif):-
     Y8 is Y+1,
     a(X8,Y8,Ref3),
     Bif = [Ref1,Ref2,Ref3].
-
-%pattern19
-bif(X, Y, Ref):-
-    X2 is X,
-    Y2 is Y-1,
-    a(X2,Y2,Ref),
-    X4 is X-1,
-    Y4 is Y,
-    a(X4,Y4,Ref),
-    a(X,Y,Ref),
-    X9 is X+1,
-    Y9 is Y+1,
-    a(X9,Y9,Ref).
-
-%pattern20
-bif(X, Y, Ref):-
-    X1 is X-1,
-    Y1 is Y-1,
-    a(X1,Y1,Ref),
-    a(X,Y,Ref),
-    X6 is X+1,
-    Y6 is Y,
-    a(X6,Y6,Ref),
-    X8 is X,
-    Y8 is Y+1,
-    a(X8,Y8,Ref).
+*/
 
 eliminatutto :-
 	a(X,Y,Ref),
