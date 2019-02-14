@@ -62,7 +62,7 @@ biforcazione(Bif) :-
 	a(X,Y,Ref),
 	bif(X,Y,Bif),
         send(Ref,colour,colour(red)),
-	colorapixel(Bif).
+	colora_lista(Bif).
 
 laghi(T) :-
 	findall(Lag,lago(Lag),Laghi),
@@ -74,8 +74,8 @@ lago(VRef1) :-
 	lag(X,Y,VRef1,W,Z,VRef2),
         send(Ref1,colour,colour(red)),
 	send(Ref2,colour,colour(red)),
-	colorapixel(VRef1),
-	colorapixel(VRef2).
+	colora_lista(VRef1),
+	colora_lista(VRef2).
 
 
 lag(X,Y,VRef1,W,Z,VRef2) :-
@@ -267,10 +267,11 @@ cerca_spazi_bianchi_orizzontali(X,Y,Ref,Finestra):-
 	\+ a(XBianco,YBiancoUp,_),
 	\+ a(XBianco,YBiancoDown,_),
 	\+ a(XBianco,Y,_),
-	new(Ref1, box(2,2)),
+	new(Ref1, box(4,4)),
 	assert(a(XBianco,Y,Ref1)),
 	send(Ref1,colour,colour(blue)),
-	send(Finestra,display,Ref1,point((XBianco*2),(Y*2))).
+	send(Ref1,fill_pattern,colour(blue)),
+	send(Finestra,display,Ref1,point((XBianco*4),(Y*4))).
 
 cerca_spazi_bianchi_verticali(X,Y,Ref,Finestra):-
 	a(X,Y,Ref),
@@ -282,10 +283,11 @@ cerca_spazi_bianchi_verticali(X,Y,Ref,Finestra):-
 	\+ a(XBiancoSx,YBianco,_),
 	\+ a(XBiancoDx,YBianco,_),
 	\+ a(X,YBianco,_),
-	new(Ref2, box(2,2)),
+	new(Ref2, box(4,4)),
 	assert(a(X,YBianco,Ref2)),
 	send(Ref2,colour,colour(green)),
-	send(Finestra,display,Ref2,point((X*2),(YBianco*2))).
+	send(Ref2,fill_pattern,colour(green)),
+	send(Finestra,display,Ref2,point((X*4),(YBianco*4))).
 
 
 % cancellazione dei pixel errati cioè di quei pixel che hanno un numero
@@ -316,17 +318,17 @@ colora_pixel([Xf/Yf],Finestra):-
 	a(Xf,Yf,_),
 	retract(a(Xf,Yf,_)),
 	assert(a(Xf,Yf,Reef)),
-	new(Reef, box(2,2)),
-	send(Reef,colour,colour(black)),
-	send(Finestra,display,Reef,point((Xf*2),(Yf*2))).
+	new(Reef, box(4,4)),
+	send(Reef,fill_pattern,colour(black)),
+	send(Finestra,display,Reef,point((Xf*4),(Yf*4))).
 
 colora_pixel([Xf/Yf|C],Finestra):-
 	a(Xf,Yf,_),
 	retract(a(Xf,Yf,_)),
 	assert(a(Xf,Yf,Reef)),
-	new(Reef, box(2,2)),
-	send(Reef,colour,colour(black)),
-	send(Finestra,display,Reef,point((Xf*2),(Yf*2))),
+	new(Reef, box(4,4)),
+	send(Reef,fill_pattern,colour(black)),
+	send(Finestra,display,Reef,point((Xf*4),(Yf*4))),
 	colora_pixel(C,Finestra).
 
 
