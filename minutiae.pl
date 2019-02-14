@@ -54,6 +54,103 @@ tratto_di_2(A,B,C,D,Ref1,Ref2) :-
 	terminazione(C,D,Ref2),
 	vicino(A/B,C/D).
 
+%predicato per riempire gli spazi bianchi che creano dei buchi
+riempi_spazi_bianchi(Finestra):-
+	findall(v(X,Y),cerca_spazi_bianchi_orizzontali(X,Y,_, Finestra),_),
+	findall(v(X,Y),cerca_spazi_bianchi_verticali(X,Y,_, Finestra),_).
+
+cerca_spazi_bianchi_orizzontali(X,Y,Ref,Finestra):-
+	a(X,Y,Ref),
+	Xdx is (X+2),
+	YUp is (Y-1),
+	YDown is (Y+1),
+	(a(Xdx,Y,_)
+	;
+	a(Xdx,YUp,_)
+	;
+	a(Xdx,YDown,_)),
+	XBianco is (X+1),
+	\+ a(XBianco,YUp,_),
+	\+ a(XBianco,YDown,_),
+	\+ a(XBianco,Y,_),
+	new(Ref1, box(2,2)),
+	assert(a(XBianco,Y,Ref1)),
+	send(Ref1,colour,colour(black)),
+	send(Finestra,display,Ref1,point((XBianco*2),(Y*2))).
+
+cerca_spazi_bianchi_verticali(X,Y,Ref,Finestra):-
+	a(X,Y,Ref),
+	YDown is (Y+2),
+	XSx is (X-1),
+	XDx is (X+1),
+	(a(X,YDown,_)
+	;
+	a(XSx,YDown,_)
+	;
+	a(XDx,YDown,_)),
+	YBianco is (Y+1),
+	\+ a(XSx,YBianco,_),
+	\+ a(XDx,YBianco,_),
+	\+ a(X,YBianco,_),
+	new(Ref2, box(2,2)),
+	assert(a(X,YBianco,Ref2)),
+	send(Ref2,colour,colour(black)),
+	send(Finestra,display,Ref2,point((X*2),(YBianco*2))).
+
+
+% cancellazione dei pixel errati cioè di quei pixel che hanno un numero
+% strettamente maggiore di pixel vicini i quali hanno a loro volta 4
+% pixel vicini
+cancella_pixel_errati(Finestra):-
+	findall(X/Y,trova_pixel_errati(X,Y,_,Finestra),_).
+
+trova_pixel_errati(X,Y,Ref,_):-
+	a(X,Y,Ref),
+	findall(v(Xv,Yv),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),ListaVicini),
+	length(ListaVicini,LunghezzaVicini),
+	LunghezzaVicini > 2,
+	controllo_4connection_neighbors(ListaVicini,Prova),
+	length(Prova,Lungh),
+	Lungh > 2,
+	send(Ref,colour,colour(white)),
+	retract(a(X,Y,_)).
+
+controllo_4connection_neighbors([],[]).
+controllo_4connection_neighbors([v(X,Y)|Coda],Prova1):-
+	controllo_4connection_neighbors(Coda,Prova),
+	findall(v(Xv,Yv),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),ListaSottoVicini),
+	length(ListaSottoVicini,LunghezzaSotto),
+	LunghezzaSotto > 3,
+	!,
+	append(Prova,[v(X,Y)],Prova1).
+
+
+cancella_pixel_errati_3(Finestra):-
+	findall(X/Y,trova_pixel_errati_3(X,Y,_,Finestra),_).
+
+trova_pixel_errati_3(X,Y,Ref,_):-
+	a(X,Y,Ref),
+
+	findall(v(Xv,Yv),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),ListaVicini),
+	length(ListaVicini,LunghezzaVicini),
+	LunghezzaVicini > 2,
+	controllo_3connection_neighbors(ListaVicini,Prova),
+	length(Prova,Lungh),
+	Lungh > 2,
+	send(Ref,colour,colour(white)),
+	retract(a(X,Y,_)).
+	%colora_pixel(ListaVicini,Finestra).
+
+controllo_3connection_neighbors([],[]).
+controllo_3connection_neighbors([v(X,Y)|Coda],Prova1):-
+	controllo_3connection_neighbors(Coda,Prova),
+	findall(v(Xv,Yv),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),ListaSottoVicini),
+	length(ListaSottoVicini,LunghezzaSotto),
+	LunghezzaSotto > 2,
+	!,
+	append(Prova,[v(X,Y)],Prova1).
+
+
 biforcazioni(T) :-
 	findall(Bif, biforcazione(Bif), Biforcazioni),
 	length(Biforcazioni,T).
@@ -118,95 +215,7 @@ bif(X,Y,Bif) :-
 	a(X9,Y9,Ref3),
 	Bif = [Ref1,Ref2,Ref3].
 
-%predicato per riempire gli spazi bianchi che creano dei buchi
-riempi_spazi_bianchi(Finestra):-
 
-	findall(v(X,Y),cerca_spazi_bianchi_orizzontali(X,Y,_, Finestra),_),
-	findall(v(X,Y),cerca_spazi_bianchi_verticali(X,Y,_, Finestra),_).
-
-
-cerca_spazi_bianchi_orizzontali(X,Y,Ref,Finestra):-
-	a(X,Y,Ref),
-	Xdx is (X+2),
-	a(Xdx,Y,_),
-	XBianco is (X+1),
-	YBiancoUp is (Y-1),
-	YBiancoDown is (Y+1),
-	\+ a(XBianco,YBiancoUp,_),
-	\+ a(XBianco,YBiancoDown,_),
-	\+ a(XBianco,Y,_),
-	new(Ref1, box(2,2)),
-	assert(a(XBianco,Y,Ref1)),
-	send(Ref1,colour,colour(blue)),
-	send(Finestra,display,Ref1,point((XBianco*2),(Y*2))).
-
-cerca_spazi_bianchi_verticali(X,Y,Ref,Finestra):-
-	a(X,Y,Ref),
-	YDown is (Y+2),
-	a(X,YDown,_),
-	YBianco is (Y+1),
-	XBiancoSx is (X-1),
-	XBiancoDx is (X+1),
-	\+ a(XBiancoSx,YBianco,_),
-	\+ a(XBiancoDx,YBianco,_),
-	\+ a(X,YBianco,_),
-	new(Ref2, box(2,2)),
-	assert(a(X,YBianco,Ref2)),
-	send(Ref2,colour,colour(green)),
-	send(Finestra,display,Ref2,point((X*2),(YBianco*2))).
-
-
-% cancellazione dei pixel errati cioè di quei pixel che hanno un numero
-% strettamente maggiore di pixel vicini i quali hanno a loro volta 4
-% pixel vicini
-cancella_pixel_errati(Finestra):-
-	findall(X/Y,trova_pixel_errati(X,Y,_,Finestra),_).
-
-% abbiamo individuato e colorato di rosso i pixel che hanno un numero di
-% vicini strettamente maggiore di 2
-% NOTA: ORA DOBBIAMO PRIMA EVIDENZIARE PER VERIFICARE LA CORRETTEZZA E
-% POI CANCELLARE I PIXEL ERRATI (VEDI DEFINIZIONE)
-trova_pixel_errati(X,Y,Ref,Finestra):-
-	a(X,Y,Ref),
-	findall(X/Y,(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),ListaVicini),
-	length(ListaVicini,LunghezzaVicini),
-	(LunghezzaVicini > 2),
-	colora_pixel(ListaVicini,Finestra).
-
-      % NOTA:RIFARE PROCEDMENTO DEL ASSERT RETRACT COME SU COLORA PIXEL E CONTROLLARE IL CASO DEI 4 VICINI DEI VICINI DEL PIXEL ERRATO
-	%controllo_4connection_neighbors(ListaVicini),
-	%retract(a(X,Y,Ref)).
-	%send(Ref,colour,colour(red)),
-	%send(Finestra,display,Ref,point((X*2),(Y*2))).
-
-colora_pixel([],_).
-colora_pixel([Xf/Yf],Finestra):-
-	a(Xf,Yf,_),
-	retract(a(Xf,Yf,_)),
-	assert(a(Xf,Yf,Reef)),
-	new(Reef, box(2,2)),
-	send(Reef,colour,colour(black)),
-	send(Finestra,display,Reef,point((Xf*2),(Yf*2))).
-
-colora_pixel([Xf/Yf|C],Finestra):-
-	a(Xf,Yf,_),
-	retract(a(Xf,Yf,_)),
-	assert(a(Xf,Yf,Reef)),
-	new(Reef, box(2,2)),
-	send(Reef,colour,colour(black)),
-	send(Finestra,display,Reef,point((Xf*2),(Yf*2))),
-	colora_pixel(C,Finestra).
-
-
-
-
-controllo_4connection_neighbors([]).
-controllo_4connection_neighbors([v(Xv,Yv)|Coda]):-
-	a(Xv,Yv,_),
-	%findall(v(Xv,Yv),(vicino(Xv/Yv,Xvv/Yvv),a(Xvv,Yvv,_)),ListaSottoVicini),
-	%length(ListaSottoVicini,LunghezzaSotto),
-	%LunghezzaSotto > 3,
-        controllo_4connection_neighbors(Coda).
 
 %pattern17
 bif(X, Y, Ref):-
@@ -259,3 +268,4 @@ bif(X, Y, Ref):-
     X8 is X,
     Y8 is Y+1,
     a(X8,Y8,Ref).
+
