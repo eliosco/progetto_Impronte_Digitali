@@ -817,7 +817,79 @@ eliminatutto :-
 	retract(a(X,Y,Ref)),
 	free(Ref).
 
+%#######False minutiae##############à
 
+%false minutiae
+% innanzitutto ho bisogno di un predicato che calcoli la distanza tra
+% due minutie qualsiasi(due biforcazioni, due terminazioni, una bif
+% una terminazione).
+distanza_minutiae(Xa/Ya,Xb/Yb,Distanza):-
+	Xdiff is Xb-Xa,
+	Ydiff is Yb-Ya,
+	XQ is Xdiff^2,
+	YQ is Ydiff^2,
+	Dist is XQ+YQ,
+	Distanza is sqrt(Dist).
+
+% di seguito mi occorre calcolare la distanza media tra due creste D,
+% che si ottiene riga per riga:
+% 1-scannerizzando la riga e sommando tutti i pixel il cui valore è
+% 1(neri)
+% 2- Divido la lunghezza della riga per la somma ottenuta, il risultato
+% sarà D per quella riga.
+% 3- Ripeto procedimento per tutte le righe e faccio la media per
+% ottenere la distanza media tra due creste D(average inter-rigde
+% width).
+%
+% Per ora metto D=6
+trova_minutiae_terminazioni(Lista):-
+	findall(t(X,Y),trova_false_terminazioni(t(X,Y),t(_,_)),Lista).
+
+trova_false_terminazioni(t(X1,Y1),t(X2,Y2)):-
+	terminazione(X1,Y1,Ref),
+	terminazione(X2,Y2,Ref2),
+	X1\=X2,
+	Y1\=Y2,
+	distanza_minutiae(X1/Y1,X2/Y2,Distanza),
+	Distanza =<6,
+	send(Ref, colour, colour(green)),
+	send(Ref2, colour, colour(green)),
+	retract(a(X1,Y2,_)),
+	retract(a(X2,Y2,_)).
+
+%facciamo stessa cosa per due biforcazioni
+trova_minutiae_biforcazioni(Lista):-
+	findall(t(X,Y,Bif),trova_false_biforcazioni(t(X,Y,Bif),t(_,_,_)),Lista).
+
+trova_false_biforcazioni(t(X1,Y1,Bif),t(X2,Y2,Bif2)):-
+	biforcazionecoordinate(X1,Y1,Bif),
+	biforcazionecoordinate(X2,Y2,Bif2),
+	X1\=X2,
+	Y1\=Y2,
+	Bif\=Bif2,
+	distanza_minutiae(X1/Y1,X2/Y2,Distanza),
+	Distanza=<6,
+	retract(a(X1,Y1,_)),
+	retract(a(X2,Y2,_)).
+
+%facciamo stessa cosa per una biforcazione e una terminazione
+trova_minutiae_biforc_term(Lista):-
+	findall(t(X,Y,Bif),trova_false_bt(t(X,Y,Bif),t(_,_)),Lista).
+
+trova_false_bt(t(X1,Y1,Bif),t(X2,Y2)):-
+	biforcazionecoordinate(X1,Y1,Bif),
+	terminazione(X2,Y2,Ref),
+	X1\=X2,
+	Y1\=Y2,
+	distanza_minutiae(X1/Y1,X2/Y2,Distanza),
+	Distanza=<6,
+	send(Ref, colour, colour(green)),
+	retract(a(X1,Y1,_)),
+	retract(a(X2,Y2,_)).
+
+biforcazionecoordinate(X,Y,Bif) :-
+	a(X,Y,_),
+	bif(X,Y,Bif).
 
 
 
