@@ -29,6 +29,7 @@ vicino(X/Y,Xv/Yv) :-
 	    Yv is Y - 1
 	).
 
+
 isolati(T) :-
 	findall(t(X,Y),isolato(X,Y,_),Isolati),
 	length(Isolati,T).
@@ -42,11 +43,31 @@ terminazioni(T) :-
 	findall(t(X,Y),terminazione(X,Y,_),Terminazioni),
 	length(Terminazioni,T).
 
+% predicato per individuare le terminazioni interne all'impronta
 terminazione(X,Y,Ref) :-
 	a(X,Y,Ref),
 	findall(v(X,Y),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),Vicini),
-	length(Vicini,1),
-	send(Ref, colour, colour(red)).
+        length(Vicini,1),
+	findall(v(X,Y),terminazioni_esterne_dx(X,Y),Ter_dx),
+	findall(v(X,Y),terminazioni_esterne_sx(X,Y),Ter_sx),
+	length(Ter_dx,L_dx),
+	L_dx>0,
+	length(Ter_sx,L_sx),
+	L_sx>0,
+	send(Ref, colour, colour(green)),
+	send(Ref, fill_pattern, colour(green)).
+
+terminazioni_esterne_dx(X,Y) :-
+            a(Xv,Y,_),
+            Xv > X .
+
+terminazioni_esterne_sx(X,Y) :-
+	 a(Xv,Y,_),
+            Xv < X .
+
+
+
+
 
 
 tratto_di_2(A,B,C,D,Ref1,Ref2) :-
