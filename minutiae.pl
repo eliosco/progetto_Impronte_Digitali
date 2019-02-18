@@ -55,7 +55,12 @@ tratto_di_2(A,B,C,D,Ref1,Ref2) :-
 	vicino(A/B,C/D).
 
 correggi_impronta(Finestra):-
-	cancella_pixel_errati(Finestra),
+	riempi_spazi_bianchi(Finestra),
+	thinning(Finestra),
+	riempi_spazi_bianchi(Finestra),
+	thinning(Finestra),
+	perfezionamento(Finestra).
+/*	cancella_pixel_errati(Finestra),
 	riempi_spazi_bianchi(Finestra),
 	cancella_pixel_errati_3(Finestra),
 	riempi_spazi_bianchi(Finestra),
@@ -63,6 +68,241 @@ correggi_impronta(Finestra):-
 	cross_control(Finestra),
 	riempi_spazi_bianchi_diagonali(Finestra),
 	riempi_spazi_bianchi(Finestra). %predicato per cancellare i pixel errati
+*/
+
+thinning(Finestra):-
+	findall(X/Y,canc_T_up(X,Y,_,Finestra),_),
+	findall(X/Y,canc_T_down(X,Y,_,Finestra),_),
+	findall(X/Y,canc_T_dx(X,Y,_,Finestra),_),
+	findall(X/Y,canc_T_sx(X,Y,_,Finestra),_),
+	findall(X/Y,canc_L1(X,Y,_,Finestra),_),
+	findall(X/Y,canc_L2(X,Y,_,Finestra),_),
+	findall(X/Y,canc_L3(X,Y,_,Finestra),_),
+	findall(X/Y,canc_L4(X,Y,_,Finestra),_).
+
+canc_T_up(X,Y,Ref,_):-
+	a(X,Y,Ref),
+	Xdx is X+1,
+	Xsx is X-1,
+	Yu is Y-1,
+	Yd is Y+1,
+	a(X,Yd,_),
+	a(Xdx,Yd,_),
+	a(Xsx,Yd,_),
+	\+ a(X,Yu,_),
+	\+ a(Xdx,Yu,_),
+	\+ a(Xsx,Yu,_),
+	retract(a(X,Y,Ref)),
+	%send(Ref,colour,colour(red)),
+	%send(Ref,fill_pattern,colour(red)).
+	free(Ref).
+
+canc_T_down(X,Y,Ref,_):-
+	a(X,Y,Ref),
+	Xdx is X+1,
+	Xsx is X-1,
+	Yu is Y-1,
+	Yd is Y+1,
+	a(X,Yu,_),
+	a(Xdx,Yu,_),
+	a(Xsx,Yu,_),
+	\+ a(X,Yd,_),
+	\+ a(Xdx,Yd,_),
+	\+ a(Xsx,Yd,_),
+	retract(a(X,Y,Ref)),
+	%send(Ref,colour,colour(red)),
+	%send(Ref,fill_pattern,colour(red)).
+	free(Ref).
+
+canc_T_dx(X,Y,Ref,_):-
+	a(X,Y,Ref),
+	Xdx is X+1,
+	Xsx is X-1,
+	Yu is Y-1,
+	Yd is Y+1,
+	a(Xsx,Y,_),
+	a(Xsx,Yu,_),
+	a(Xsx,Yd,_),
+	\+ a(Xdx,Y,_),
+	\+ a(Xdx,Yu,_),
+	\+ a(Xdx,Yd,_),
+	retract(a(X,Y,Ref)),
+	%send(Ref,colour,colour(red)),
+	%send(Ref,fill_pattern,colour(red)).
+	free(Ref).
+
+canc_T_sx(X,Y,Ref,_):-
+	a(X,Y,Ref),
+	Xdx is X+1,
+	Xsx is X-1,
+	Yu is Y-1,
+	Yd is Y+1,
+	a(Xdx,Y,_),
+	a(Xdx,Yu,_),
+	a(Xdx,Yd,_),
+	\+ a(Xsx,Y,_),
+	\+ a(Xsx,Yu,_),
+	\+ a(Xsx,Yd,_),
+	retract(a(X,Y,Ref)),
+	%send(Ref,colour,colour(red)),
+	%send(Ref,fill_pattern,colour(red)).
+	free(Ref).
+
+canc_L1(X,Y,Ref,_):-
+	a(X,Y,Ref),
+	Xdx is X+1,
+	Xsx is X-1,
+	Yu is Y-1,
+	Yd is Y+1,
+	a(Xdx,Y,_),
+	a(X,Yu,_),
+	\+ a(Xsx,Y,_),
+	\+ a(Xsx,Yd,_),
+	\+ a(X,Yd,_),
+	retract(a(X,Y,Ref)),
+	%send(Ref,colour,colour(red)),
+	%send(Ref,fill_pattern,colour(red)).
+	free(Ref).
+
+canc_L2(X,Y,Ref,_):-
+	a(X,Y,Ref),
+	Xdx is X+1,
+	Xsx is X-1,
+	Yu is Y-1,
+	Yd is Y+1,
+	a(Xsx,Y,_),
+	a(X,Yu,_),
+	\+ a(Xdx,Y,_),
+	\+ a(Xdx,Yd,_),
+	\+ a(X,Yd,_),
+	retract(a(X,Y,Ref)),
+	%send(Ref,colour,colour(red)),
+	%send(Ref,fill_pattern,colour(red)).
+	free(Ref).
+
+canc_L3(X,Y,Ref,_):-
+	a(X,Y,Ref),
+	Xdx is X+1,
+	Xsx is X-1,
+	Yu is Y-1,
+	Yd is Y+1,
+	a(Xdx,Y,_),
+	a(X,Yd,_),
+	\+ a(X,Yu,_),
+	\+ a(Xsx,Yu,_),
+	\+ a(Xsx,Y,_),
+	retract(a(X,Y,Ref)),
+	%send(Ref,colour,colour(red)),
+	%send(Ref,fill_pattern,colour(red)).
+	free(Ref).
+
+canc_L4(X,Y,Ref,_):-
+	a(X,Y,Ref),
+	Xdx is X+1,
+	Xsx is X-1,
+	Yu is Y-1,
+	Yd is Y+1,
+	a(Xsx,Y,_),
+	a(X,Yd,_),
+	\+ a(X,Yu,_),
+	\+ a(Xdx,Yu,_),
+	\+ a(Xdx,Y,_),
+	retract(a(X,Y,Ref)),
+	%send(Ref,colour,colour(red)),
+	%send(Ref,fill_pattern,colour(red)).
+	free(Ref).
+
+perfezionamento(Finestra):-
+	findall(X/Y,perfez1(X,Y,_,Finestra),_),
+	findall(X/Y,perfez2(X,Y,_,Finestra),_),
+	findall(X/Y,perfez3(X,Y,_,Finestra),_),
+	findall(X/Y,perfez4(X,Y,_,Finestra),_).
+
+perfez1(X,Y,Ref,_):-
+	a(X,Y,Ref),
+	Xdx is X+1,
+	Xsx is X-1,
+	Yu is Y-1,
+	Yd is Y+1,
+	a(Xdx,Y,_),
+	(   a(Xdx,Yu,_)
+	;
+	    a(Xdx,Yd,_)),
+	\+ a(X,Yu,_),
+	\+ a(Xsx,Yu,_),
+	\+ a(Xsx,Y,_),
+	\+ a(Xsx,Yd,_),
+	\+ a(X,Yd,_),
+	retract(a(X,Y,Ref)),
+	%send(Ref,colour,colour(red)),
+	%send(Ref,fill_pattern,colour(red)).
+	free(Ref).
+
+perfez2(X,Y,Ref,_):-
+	a(X,Y,Ref),
+	Xdx is X+1,
+	Xsx is X-1,
+	Yu is Y-1,
+	Yd is Y+1,
+	a(Xsx,Y,_),
+	(   a(Xsx,Yu,_)
+	;
+	    a(Xsx,Yd,_)),
+	\+ a(X,Yu,_),
+	\+ a(Xdx,Yu,_),
+	\+ a(Xdx,Y,_),
+	\+ a(Xdx,Yd,_),
+	\+ a(X,Yd,_),
+	retract(a(X,Y,Ref)),
+	%send(Ref,colour,colour(red)),
+	%send(Ref,fill_pattern,colour(red)).
+	free(Ref).
+
+perfez3(X,Y,Ref,_):-
+	a(X,Y,Ref),
+	Xdx is X+1,
+	Xsx is X-1,
+	Yu is Y-1,
+	Yd is Y+1,
+	a(X,Yu,_),
+	(   a(Xdx,Yu,_)
+	;
+	    a(Xsx,Yu,_)),
+	\+ a(Xsx,Y,_),
+	\+ a(Xsx,Yd,_),
+	\+ a(X,Yd,_),
+	\+ a(Xdx,Yd,_),
+	\+ a(Xdx,Y,_),
+	retract(a(X,Y,Ref)),
+	%send(Ref,colour,colour(red)),
+	%send(Ref,fill_pattern,colour(red)).
+	free(Ref).
+
+perfez4(X,Y,Ref,_):-
+	a(X,Y,Ref),
+	Xdx is X+1,
+	Xsx is X-1,
+	Yu is Y-1,
+	Yd is Y+1,
+	a(X,Yd,_),
+	(   a(Xdx,Yd,_)
+	;
+	    a(Xsx,Yd,_)),
+	\+ a(Xsx,Y,_),
+	\+ a(Xsx,Yu,_),
+	\+ a(X,Yu,_),
+	\+ a(Xdx,Yu,_),
+	\+ a(Xdx,Y,_),
+	retract(a(X,Y,Ref)),
+	%send(Ref,colour,colour(red)),
+	%send(Ref,fill_pattern,colour(red)).
+	free(Ref).
+
+
+
+
+
+
 
 %predicato per riempire gli spazi bianchi che creano dei buchi
 riempi_spazi_bianchi(Finestra):-
@@ -80,40 +320,40 @@ cerca_spazi_bianchi_orizzontali(X,Y,Ref,Finestra):-
 	Xdx is (X+2),
 	YUp is (Y-1),
 	YDown is (Y+1),
+	X1 is X+1,
 	(a(Xdx,Y,_)
 	;
-	a(Xdx,YUp,_)
+	(   a(Xdx,YUp,_),
+	    \+ a(X1,YUp,_))
 	;
-	a(Xdx,YDown,_)),
-	XBianco is (X+1),
-	\+ a(XBianco,YUp,_),
-	\+ a(XBianco,YDown,_),
-	\+ a(XBianco,Y,_),
+	(   a(Xdx,YDown,_),
+	    \+ a(X1,YDown,_))),
+	\+ a(X1,Y,_),
 	new(Ref1, box(4,4)),
-	assert(a(XBianco,Y,Ref1)),
+	assert(a(X1,Y,Ref1)),
 	send(Ref1,colour,colour(black)),
 	send(Ref1,fill_pattern,colour(black)),
-	send(Finestra,display,Ref1,point((XBianco*4),(Y*4))).
+	send(Finestra,display,Ref1,point((X1*4),(Y*4))).
 
 cerca_spazi_bianchi_verticali(X,Y,Ref,Finestra):-
 	a(X,Y,Ref),
 	YDown is (Y+2),
+	Yd is Y+1,
 	XSx is (X-1),
 	XDx is (X+1),
 	(a(X,YDown,_)
 	;
-	a(XSx,YDown,_)
+	(   a(XSx,YDown,_),
+	    \+ a(XSx,Yd,_))
 	;
-	a(XDx,YDown,_)),
-	YBianco is (Y+1),
-	\+ a(XSx,YBianco,_),
-	\+ a(XDx,YBianco,_),
-	\+ a(X,YBianco,_),
+	(   a(XDx,YDown,_),
+	    \+ a(XDx,Yd,_))),
+	\+ a(X,Yd,_),
 	new(Ref2, box(4,4)),
-	assert(a(X,YBianco,Ref2)),
+	assert(a(X,Yd,Ref2)),
 	send(Ref2,colour,colour(black)),
 	send(Ref2,fill_pattern,colour(black)),
-	send(Finestra,display,Ref2,point((X*4),(YBianco*4))).
+	send(Finestra,display,Ref2,point((X*4),(Yd*4))).
 
 cerca_spazi_bianchi_diagonali_alto_dx(X,Y,Ref,Finestra):-
 	a(X,Y,Ref),
