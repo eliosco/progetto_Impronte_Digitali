@@ -41,23 +41,21 @@ isolato(X,Y,Ref) :-
 
 terminazioni(T) :-
 	findall(t(X,Y),terminazione(X,Y,_),Terminazioni),
-
 	length(Terminazioni,T).
 
+% predicato per individuare le terminazioni interne all'impronta
 terminazione(X,Y,Ref) :-
 	a(X,Y,Ref),
 	findall(v(X,Y),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),Vicini),
-	%findall(_,terminazioni_esterne(X,Y),Vicini),
-	length(Vicini,1),
+        length(Vicini,1),
 	findall(v(X,Y),terminazioni_esterne_dx(X,Y),Ter_dx),
 	findall(v(X,Y),terminazioni_esterne_sx(X,Y),Ter_sx),
 	length(Ter_dx,L_dx),
-	L_dx>1,
+	L_dx>0,
 	length(Ter_sx,L_sx),
-	L_sx>1,
-	send(Ref, colour, colour(red)).
-
-%terminazioni_esterne(X,_) :- X=0; X=302.
+	L_sx>0,
+	send(Ref, colour, colour(green)),
+	send(Ref, fill_pattern, colour(green)).
 
 terminazioni_esterne_dx(X,Y) :-
             a(Xv,Y,_),
