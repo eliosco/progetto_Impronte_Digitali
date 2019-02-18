@@ -13,7 +13,7 @@
  :- dynamic(a/3).
 
 % apre una finestra e vi disegna l'impronta contenuta nel file.bmp
-% ?- disegna_impronta('fingprintbin.bmp', @a).
+% ?- disegna_impronta('fingprintbin.bmp', Variabile).
 disegna_impronta(FileName, Finestra) :- % FileName e Finestra istanziati
 	new(@impronta, picture('Impronta Digitale')),%carica l'impronta
 	%new(Finestra, picture('Impronta Digitale')), %genera finestra
