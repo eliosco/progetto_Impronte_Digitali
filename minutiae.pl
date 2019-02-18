@@ -28,33 +28,7 @@ vicino(X/Y,Xv/Yv) :-
 	;   Xv is X - 1,
 	    Yv is Y - 1
 	).
-vicino2(X/Y,Xv/Yv) :-
-	(   Xv is X + 1,
-	    Yv is Y + 1
 
-	;   Xv is X + 1,
-	    Yv = Y
-
-	;   Xv is X + 1,
-	    Yv is Y - 1
-
-	;   Xv = X,
-	    Yv is Y + 1
-
-	;   Xv = X,
-	    Yv is Y - 1
-
-	;   Xv is X - 1,
-	    Yv is Y + 1
-
-	;   Xv is X - 1,
-	    Yv = Y
-
-	;   Xv is X - 1,
-	    Yv is Y - 1
-
-	),
-	terminazioni_esterne(X,Y).
 
 isolati(T) :-
 	findall(t(X,Y),isolato(X,Y,_),Isolati),
