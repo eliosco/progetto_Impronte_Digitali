@@ -1093,14 +1093,12 @@ trova_minutiae_terminazioni :-
 	findall(t(X,Y),trova_false_terminazioni(t(X,Y),t(_,_)),_).
 
 trova_false_terminazioni(t(X1,Y1),t(X2,Y2)):-
-	terminazione(X1,Y1,Ref),
-	terminazione(X2,Y2,Ref2),
+	terminazione(X1,Y1,_),
+	terminazione(X2,Y2,_),
 	X1\=X2,
 	Y1\=Y2,
 	distanza_minutiae(X1/Y1,X2/Y2,Distanza),
 	Distanza =<6,
-	send(Ref, colour, colour(green)),
-	send(Ref2, colour, colour(green)),
 	retract(a(X1,Y2,_)),
 	retract(a(X2,Y2,_)).
 
@@ -1125,12 +1123,11 @@ trova_minutiae_biforc_term :-
 
 trova_false_bt(t(X1,Y1,Bif),t(X2,Y2)):-
 	biforcazionecoordinate(X1,Y1,Bif),
-	terminazione(X2,Y2,Ref),
+	terminazione(X2,Y2,_),
 	X1\=X2,
 	Y1\=Y2,
 	distanza_minutiae(X1/Y1,X2/Y2,Distanza),
 	Distanza=<6,
-	send(Ref, colour, colour(green)),
 	retract(a(X1,Y1,_)),
 	retract(a(X2,Y2,_)).
 
@@ -1138,10 +1135,7 @@ biforcazionecoordinate(X,Y,Bif) :-
 	a(X,Y,_),
 	bif(X,Y,Bif).
 
-/* Determinare se due minutiae sono su stesso ridge
- * Se prendendo in input coordinate di uno dei due ricorsivamente c'è un
- * vicino che ha per vicino ecc l'altro punto
- */
+
 
 
 
