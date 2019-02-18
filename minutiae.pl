@@ -408,8 +408,11 @@ biforcazioni(T) :-
 biforcazione(Bif) :-
 	a(X,Y,Ref),
 	bif(X,Y,Bif),
-        send(Ref,colour,colour(red)),
-	colora_lista(Bif).
+	%new(Colore,colour(red)),
+        %send(Ref,colour,colour(red)),
+	send(Ref,colour(colour(red))),
+	send(Ref,fill_pattern(colour(red))),
+	colora_lista(Bif,colour(red)).
 
 laghi(T) :-
 	findall(Lag,lago(Lag),Laghi),
