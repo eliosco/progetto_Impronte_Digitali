@@ -891,6 +891,11 @@ biforcazionecoordinate(X,Y,Bif) :-
 	a(X,Y,_),
 	bif(X,Y,Bif).
 
+/* Determinare se due minutiae sono su stesso ridge
+ * Se prendendo in input coordinate di uno dei due ricorsivamente c'è un
+ * vicino che ha per vicino ecc l'altro punto
+ */
+
 
 
 
