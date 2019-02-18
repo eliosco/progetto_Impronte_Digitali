@@ -28,6 +28,33 @@ vicino(X/Y,Xv/Yv) :-
 	;   Xv is X - 1,
 	    Yv is Y - 1
 	).
+vicino2(X/Y,Xv/Yv) :-
+	(   Xv is X + 1,
+	    Yv is Y + 1
+
+	;   Xv is X + 1,
+	    Yv = Y
+
+	;   Xv is X + 1,
+	    Yv is Y - 1
+
+	;   Xv = X,
+	    Yv is Y + 1
+
+	;   Xv = X,
+	    Yv is Y - 1
+
+	;   Xv is X - 1,
+	    Yv is Y + 1
+
+	;   Xv is X - 1,
+	    Yv = Y
+
+	;   Xv is X - 1,
+	    Yv is Y - 1
+
+	),
+	terminazioni_esterne(X,Y).
 
 isolati(T) :-
 	findall(t(X,Y),isolato(X,Y,_),Isolati),
@@ -40,13 +67,35 @@ isolato(X,Y,Ref) :-
 
 terminazioni(T) :-
 	findall(t(X,Y),terminazione(X,Y,_),Terminazioni),
+
 	length(Terminazioni,T).
 
 terminazione(X,Y,Ref) :-
 	a(X,Y,Ref),
 	findall(v(X,Y),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),Vicini),
+	%findall(_,terminazioni_esterne(X,Y),Vicini),
 	length(Vicini,1),
+	findall(v(X,Y),terminazioni_esterne_dx(X,Y),Ter_dx),
+	findall(v(X,Y),terminazioni_esterne_sx(X,Y),Ter_sx),
+	length(Ter_dx,L_dx),
+	L_dx>1,
+	length(Ter_sx,L_sx),
+	L_sx>1,
 	send(Ref, colour, colour(red)).
+
+%terminazioni_esterne(X,_) :- X=0; X=302.
+
+terminazioni_esterne_dx(X,Y) :-
+            a(Xv,Y,_),
+            Xv > X .
+
+terminazioni_esterne_sx(X,Y) :-
+	 a(Xv,Y,_),
+            Xv < X .
+
+
+
+
 
 
 tratto_di_2(A,B,C,D,Ref1,Ref2) :-
