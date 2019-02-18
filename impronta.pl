@@ -13,9 +13,11 @@
  :- dynamic(a/3).
 
 % apre una finestra e vi disegna l'impronta contenuta nel file.bmp
-% ?- disegna_impronta('fingprintbin.bmp', @a).
+% ?- disegna_impronta('fingprintbin.bmp', Variabile).
 disegna_impronta(FileName, Finestra) :- % FileName e Finestra istanziati
-	new(Finestra, picture('Impronta Digitale')), % genera finestra
+	new(@impronta, picture('Impronta Digitale')),%carica l'impronta
+	%new(Finestra, picture('Impronta Digitale')), %genera finestra
+	new(Finestra, @impronta),%genera finestra con impronta
 	send(Finestra, size, size(600 , 800)), % ne specifica dimensione
 	send(Finestra, open), % apre finestra
 	esamina_bmp(FileName,Stream,DimensioneImmagine,Larghezza),
@@ -155,11 +157,15 @@ readInt16(IS, Number) :-
     get_byte(IS, B1),
     Number is B0 + B1<<8.
 
-colora_lista([]).
-colora_lista([H|T]) :-
-	send(H,colour,colour(red)),
-	send(H,fill_pattern,colour(red)),
-	colora_lista(T).
+colora_lista([],_).
+colora_lista([H|T],Colore) :-
+	send(H,colour(Colore)),
+	send(H,fill_pattern(Colore)),
+	colora_lista(T,Colore).
+
+dimensioni_impronta(Immagine,Altezza,Larghezza) :-
+	get(Immagine,height,Altezza),
+	get(Immagine,width,Larghezza).
 /*
 colorapixel(Ref,Colore) :-
 	send(Ref, colour, colour(Colore)),

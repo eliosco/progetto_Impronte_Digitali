@@ -103,22 +103,18 @@ tratto_di_2(A,B,C,D,Ref1,Ref2) :-
 	terminazione(C,D,Ref2),
 	vicino(A/B,C/D).
 
+% Predicato per migliorare il thinning di base dell'impronta, inserendo
+% preventivamente pixel laddove vi erano spazi bianchi verticali od
+% orizzonali, al fine di assottigliarla nel miglior modo possibile
 correggi_impronta(Finestra):-
 	riempi_spazi_bianchi(Finestra),
 	thinning(Finestra),
 	riempi_spazi_bianchi(Finestra),
 	thinning(Finestra),
 	perfezionamento(Finestra).
-/*	cancella_pixel_errati(Finestra),
-	riempi_spazi_bianchi(Finestra),
-	cancella_pixel_errati_3(Finestra),
-	riempi_spazi_bianchi(Finestra),
-	riempi_spazi_bianchi_diagonali(Finestra),
-	cross_control(Finestra),
-	riempi_spazi_bianchi_diagonali(Finestra),
-	riempi_spazi_bianchi(Finestra). %predicato per cancellare i pixel errati
-*/
 
+% Predicato di riconoscimento dei pattern da correggere all'interno
+% dell'immagine bitmap localizzati in finestre 3x3 pixels
 thinning(Finestra):-
 	findall(X/Y,canc_T_up(X,Y,_,Finestra),_),
 	findall(X/Y,canc_T_down(X,Y,_,Finestra),_),
@@ -129,6 +125,9 @@ thinning(Finestra):-
 	findall(X/Y,canc_L3(X,Y,_,Finestra),_),
 	findall(X/Y,canc_L4(X,Y,_,Finestra),_).
 
+%|_|_|_|
+%| |X| |
+%|X|X|X|
 canc_T_up(X,Y,Ref,_):-
 	a(X,Y,Ref),
 	Xdx is X+1,
@@ -146,6 +145,9 @@ canc_T_up(X,Y,Ref,_):-
 	%send(Ref,fill_pattern,colour(red)).
 	free(Ref).
 
+%|X|X|X|
+%| |X| |
+%|_|_|_|
 canc_T_down(X,Y,Ref,_):-
 	a(X,Y,Ref),
 	Xdx is X+1,
@@ -163,6 +165,9 @@ canc_T_down(X,Y,Ref,_):-
 	%send(Ref,fill_pattern,colour(red)).
 	free(Ref).
 
+%|X| |_|
+%|X|X|_|
+%|X| |_|
 canc_T_dx(X,Y,Ref,_):-
 	a(X,Y,Ref),
 	Xdx is X+1,
@@ -180,6 +185,9 @@ canc_T_dx(X,Y,Ref,_):-
 	%send(Ref,fill_pattern,colour(red)).
 	free(Ref).
 
+%|_| |X|
+%|_|X|X|
+%|_| |X|
 canc_T_sx(X,Y,Ref,_):-
 	a(X,Y,Ref),
 	Xdx is X+1,
@@ -197,6 +205,9 @@ canc_T_sx(X,Y,Ref,_):-
 	%send(Ref,fill_pattern,colour(red)).
 	free(Ref).
 
+%| |X| |
+%|_|X|X|
+%|_|_| |
 canc_L1(X,Y,Ref,_):-
 	a(X,Y,Ref),
 	Xdx is X+1,
@@ -213,6 +224,9 @@ canc_L1(X,Y,Ref,_):-
 	%send(Ref,fill_pattern,colour(red)).
 	free(Ref).
 
+%| |X| |
+%|X|X|_|
+%| |_|_|
 canc_L2(X,Y,Ref,_):-
 	a(X,Y,Ref),
 	Xdx is X+1,
@@ -229,6 +243,9 @@ canc_L2(X,Y,Ref,_):-
 	%send(Ref,fill_pattern,colour(red)).
 	free(Ref).
 
+%|_|_| |
+%|_|X|X|
+%| |X| |
 canc_L3(X,Y,Ref,_):-
 	a(X,Y,Ref),
 	Xdx is X+1,
@@ -245,6 +262,9 @@ canc_L3(X,Y,Ref,_):-
 	%send(Ref,fill_pattern,colour(red)).
 	free(Ref).
 
+%| |_|_|
+%|X|X|_|
+%| |X| |
 canc_L4(X,Y,Ref,_):-
 	a(X,Y,Ref),
 	Xdx is X+1,
@@ -261,12 +281,17 @@ canc_L4(X,Y,Ref,_):-
 	%send(Ref,fill_pattern,colour(red)).
 	free(Ref).
 
+% Predicato in grado di trovare ulteriori pattern da correggere
+% all'interno dell'immagine bitmap
 perfezionamento(Finestra):-
 	findall(X/Y,perfez1(X,Y,_,Finestra),_),
 	findall(X/Y,perfez2(X,Y,_,Finestra),_),
 	findall(X/Y,perfez3(X,Y,_,Finestra),_),
 	findall(X/Y,perfez4(X,Y,_,Finestra),_).
 
+%|_|_|X|   |_|_| |
+%|_|X|X|   |_|X|X|
+%|_|_| |   |_|_|X|
 perfez1(X,Y,Ref,_):-
 	a(X,Y,Ref),
 	Xdx is X+1,
@@ -287,6 +312,9 @@ perfez1(X,Y,Ref,_):-
 	%send(Ref,fill_pattern,colour(red)).
 	free(Ref).
 
+%| |_|_|   |X|_|_|
+%|X|X|_|   |X|X|_|
+%|X|_| |   | |_|_|
 perfez2(X,Y,Ref,_):-
 	a(X,Y,Ref),
 	Xdx is X+1,
@@ -307,6 +335,9 @@ perfez2(X,Y,Ref,_):-
 	%send(Ref,fill_pattern,colour(red)).
 	free(Ref).
 
+%| |X|X|   |X|X| |
+%|_|X|_|   |_|X|_|
+%|_|_|_|   |_|_|_|
 perfez3(X,Y,Ref,_):-
 	a(X,Y,Ref),
 	Xdx is X+1,
@@ -327,6 +358,9 @@ perfez3(X,Y,Ref,_):-
 	%send(Ref,fill_pattern,colour(red)).
 	free(Ref).
 
+%|_|_|_|   |_|_|_|
+%|_|X|_|   |_|X|_|
+%| |X|X|   |X|X| |
 perfez4(X,Y,Ref,_):-
 	a(X,Y,Ref),
 	Xdx is X+1,
@@ -404,173 +438,7 @@ cerca_spazi_bianchi_verticali(X,Y,Ref,Finestra):-
 	send(Ref2,fill_pattern,colour(black)),
 	send(Finestra,display,Ref2,point((X*4),(Yd*4))).
 
-cerca_spazi_bianchi_diagonali_alto_dx(X,Y,Ref,Finestra):-
-	a(X,Y,Ref),
-	X1 is (X+1),
-	XS1 is (X-1),
-	X2 is (X+2),
-	Y2Up is (Y+2),
-	YUp is (Y+1),
-	YDown is (Y-1),
-	a(X2,Y2Up,_),
-	\+ a(XS1,Y2Up,_),
-	\+ a(X,YUp,_),
-	\+ a(X,Y2Up,_),
-	\+ a(X1,Y2Up,_),
-	\+ a(X1,YUp,_),
-	\+ a(X2,YUp,_),
-	\+ a(X2,YDown,_),
-	\+ a(X2,Y,_),
-	new(Ref1, box(4,4)),
-	assert(a(X1,YUp,Ref1)),
-	send(Ref1,colour,colour(black)),
-	send(Ref1,fill_pattern,colour(black)),
-	send(Finestra,display,Ref1,point((X1*4),(YUp*4))).
 
-cerca_spazi_bianchi_diagonali_alto_sx(X,Y,Ref,Finestra):-
-	a(X,Y,Ref),
-	X1 is (X-1),
-	X2 is (X-2),
-	XD1 is (X+1),
-	Y2Up is (Y+2),
-	YUp is (Y+1),
-	YDown is (Y-1),
-	a(X2,Y2Up,_),
-	\+ a(XD1,Y2Up,_),
-	\+ a(X,YUp,_),
-	\+ a(X,Y2Up,_),
-	\+ a(X1,Y2Up,_),
-	\+ a(X1,YUp,_),
-	\+ a(X2,YUp,_),
-	\+ a(X2,YDown,_),
-	\+ a(X2,Y,_),
-	new(Ref1, box(4,4)),
-	assert(a(X1,YUp,Ref1)),
-	send(Ref1,colour,colour(black)),
-	send(Ref1,fill_pattern,colour(black)),
-	send(Finestra,display,Ref1,point((X1*4),(YUp*4))).
-
-cerca_spazi_bianchi_diagonali_basso_sx(X,Y,Ref,Finestra):-
-	a(X,Y,Ref),
-	X1 is (X-1),
-	X2 is (X-2),
-	XD1 is (X+1),
-	Y2Down is (Y-2),
-	YUp is (Y+1),
-	YDown is (Y-1),
-	a(X2,Y2Down,_),
-	\+ a(XD1,Y2Down,_),
-	\+ a(X,YDown,_),
-	\+ a(X,Y2Down,_),
-	\+ a(X1,Y2Down,_),
-	\+ a(X1,YDown,_),
-	\+ a(X2,YUp,_),
-	\+ a(X2,YDown,_),
-	\+ a(X2,Y,_),
-	new(Ref1, box(4,4)),
-	assert(a(X1,YDown,Ref1)),
-	send(Ref1,colour,colour(black)),
-	send(Ref1,fill_pattern,colour(black)),
-	send(Finestra,display,Ref1,point((X1*4),(YDown*4))).
-
-cerca_spazi_bianchi_diagonali_basso_dx(X,Y,Ref,Finestra):-
-	a(X,Y,Ref),
-	X1 is (X+1),
-	X2 is (X+2),
-	XS1 is (X-1),
-	Y2Down is (Y-2),
-	YUp is (Y+1),
-	YDown is (Y-1),
-	a(X2,Y2Down,_),
-	\+ a(XS1,Y2Down,_),
-	\+ a(X,YDown,_),
-	\+ a(X,Y2Down,_),
-	\+ a(X1,Y2Down,_),
-	\+ a(X1,YDown,_),
-	\+ a(X2,YUp,_),
-	\+ a(X2,YDown,_),
-	\+ a(X2,Y,_),
-	new(Ref1, box(4,4)),
-	assert(a(X1,YDown,Ref1)),
-	send(Ref1,colour,colour(black)),
-	send(Ref1,fill_pattern,colour(black)),
-	send(Finestra,display,Ref1,point((X1*4),(YDown*4))).
-
-% cancellazione dei pixel errati cioè di quei pixel che hanno un numero
-% strettamente maggiore di pixel vicini i quali hanno a loro volta 4
-% pixel vicini
-cancella_pixel_errati(Finestra):-
-	findall(X/Y,trova_pixel_errati(X,Y,_,Finestra),_).
-
-trova_pixel_errati(X,Y,Ref,_):-
-	a(X,Y,Ref),
-	findall(v(Xv,Yv),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),ListaVicini),
-	length(ListaVicini,LunghezzaVicini),
-	LunghezzaVicini > 2,
-	controllo_4connection_neighbors(ListaVicini,Prova),
-	length(Prova,Lungh),
-	Lungh > 2,
-	send(Ref,colour,colour(white)),
-	send(Ref,fill_pattern,colour(white)),
-	retract(a(X,Y,_)).
-
-controllo_4connection_neighbors([],[]).
-controllo_4connection_neighbors([v(X,Y)|Coda],Prova1):-
-	controllo_4connection_neighbors(Coda,Prova),
-	findall(v(Xv,Yv),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),ListaSottoVicini),
-	length(ListaSottoVicini,LunghezzaSotto),
-	LunghezzaSotto > 3,
-	!,
-	append(Prova,[v(X,Y)],Prova1).
-
-
-cancella_pixel_errati_3(Finestra):-
-	findall(X/Y,trova_pixel_errati_3(X,Y,_,Finestra),_).
-
-trova_pixel_errati_3(X,Y,Ref,_):-
-	a(X,Y,Ref),
-	findall(v(Xv,Yv),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),ListaVicini),
-	length(ListaVicini,LunghezzaVicini),
-	LunghezzaVicini > 2,
-	controllo_3connection_neighbors(ListaVicini,Prova),
-	length(Prova,Lungh),
-	Lungh > 2,
-	send(Ref,colour,colour(white)),
-	send(Ref,fill_pattern,colour(white)),
-	retract(a(X,Y,_)).
-
-controllo_3connection_neighbors([],[]).
-controllo_3connection_neighbors([v(X,Y)|Coda],Prova1):-
-	controllo_3connection_neighbors(Coda,Prova),
-	findall(v(Xv,Yv),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),ListaSottoVicini),
-	length(ListaSottoVicini,LunghezzaSotto),
-	LunghezzaSotto > 2,
-	!,
-	append(Prova,[v(X,Y)],Prova1).
-
-cross_control(Finestra):-
-	findall(v(X,Y),cross_finding(X,Y,_, Finestra),_).
-
-cross_finding(X,Y,Ref,Finestra):-
-	a(X,Y,Ref),
-	X1 is (X+1),
-	X2 is (X+2),
-	YDown is (Y-1),
-	YUp is (Y+1),
-	a(X1,YUp,_),
-	a(X1,YDown,_),
-	a(X2,Y,_),
-	(a(X1,Y,Ref1)
-	;
-	 new(Ref1, box(4,4)),
-	 assert(a(X1,Y,Ref1))),
-	elimina_pixel(X1,YUp),
-	elimina_pixel(X1,YDown),
-	elimina_pixel(X2,Y),
-	elimina_pixel(X,Y),
-	send(Ref1,colour,colour(black)),
-	send(Ref1,fill_pattern,colour(black)),
-	send(Finestra,display,Ref1,point((X1*4),(Y*4))).
 
 elimina_pixel(X,Y) :-
 	a(X,Y,Ref),
@@ -589,8 +457,11 @@ biforcazioni(T) :-
 biforcazione(Bif) :-
 	a(X,Y,Ref),
 	bif(X,Y,Bif),
-        send(Ref,colour,colour(red)),
-	colora_lista(Bif).
+	%new(Colore,colour(red)),
+        %send(Ref,colour,colour(red)),
+	send(Ref,colour(colour(red))),
+	send(Ref,fill_pattern(colour(red))),
+	colora_lista(Bif,colour(red)).
 
 laghi(T) :-
 	findall(Lag,lago(Lag),Laghi),
