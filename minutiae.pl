@@ -1059,6 +1059,13 @@ eliminatutto :-
 
 %#######False minutiae##############à
 
+false_minutiae(T,B):-
+	trova_minutiae_biforc_term,
+	trova_minutiae_biforcazioni,
+	trova_minutiae_terminazioni,
+	terminazioni(T),
+	biforcazioni(B).
+
 %false minutiae
 % innanzitutto ho bisogno di un predicato che calcoli la distanza tra
 % due minutie qualsiasi(due biforcazioni, due terminazioni, una bif
@@ -1082,8 +1089,8 @@ distanza_minutiae(Xa/Ya,Xb/Yb,Distanza):-
 % width).
 %
 % Per ora metto D=6
-trova_minutiae_terminazioni(Lista):-
-	findall(t(X,Y),trova_false_terminazioni(t(X,Y),t(_,_)),Lista).
+trova_minutiae_terminazioni :-
+	findall(t(X,Y),trova_false_terminazioni(t(X,Y),t(_,_)),_).
 
 trova_false_terminazioni(t(X1,Y1),t(X2,Y2)):-
 	terminazione(X1,Y1,Ref),
@@ -1098,8 +1105,8 @@ trova_false_terminazioni(t(X1,Y1),t(X2,Y2)):-
 	retract(a(X2,Y2,_)).
 
 %facciamo stessa cosa per due biforcazioni
-trova_minutiae_biforcazioni(Lista):-
-	findall(t(X,Y,Bif),trova_false_biforcazioni(t(X,Y,Bif),t(_,_,_)),Lista).
+trova_minutiae_biforcazioni :-
+	findall(t(X,Y,Bif),trova_false_biforcazioni(t(X,Y,Bif),t(_,_,_)),_).
 
 trova_false_biforcazioni(t(X1,Y1,Bif),t(X2,Y2,Bif2)):-
 	biforcazionecoordinate(X1,Y1,Bif),
@@ -1113,8 +1120,8 @@ trova_false_biforcazioni(t(X1,Y1,Bif),t(X2,Y2,Bif2)):-
 	retract(a(X2,Y2,_)).
 
 %facciamo stessa cosa per una biforcazione e una terminazione
-trova_minutiae_biforc_term(Lista):-
-	findall(t(X,Y,Bif),trova_false_bt(t(X,Y,Bif),t(_,_)),Lista).
+trova_minutiae_biforc_term :-
+	findall(t(X,Y,Bif),trova_false_bt(t(X,Y,Bif),t(_,_)),_).
 
 trova_false_bt(t(X1,Y1,Bif),t(X2,Y2)):-
 	biforcazionecoordinate(X1,Y1,Bif),

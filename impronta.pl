@@ -20,7 +20,8 @@ disegna_impronta(FileName, Finestra) :- % FileName e Finestra istanziati
 	send(Finestra, open), % apre finestra
 	esamina_bmp(FileName,Stream,DimensioneImmagine,Larghezza),
 	carica_bmp(Finestra,Stream,DimensioneImmagine,Larghezza),
-        correggi_impronta(Finestra).
+        correggi_impronta(Finestra),
+	false_minutiae(_,_).
 
 
 % visualizza a schermo i parametri del file.bmp caricato e restituisce:
