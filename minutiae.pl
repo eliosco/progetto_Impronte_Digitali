@@ -67,21 +67,12 @@ terminazioni_esterne_sx(X,Y) :-
             Xv < X .
 
 
-trova_tratti(X) :-
+tratti(X) :-
 	findall(t(X,Y),(terminazione(X,Y,_),tratto(t(X,Y),[],0)),Tratti),
-	length(Tratti,X).
-
-
-tratti([],_).
-tratti([T|C],Tratti) :-
-
-	tratti(C,[Singolo_tratto|Tratti]),
-
-	tratto(T,Singolo_tratto,0).
-
+	length(Tratti,X/2).
 
 tratto(t(X,Y),Tratti,Acc) :-
-	Acc =< 50,
+	Acc =< 10,
 	a(X,Y,Ref),
 	calcolo_vicini(t(X,Y),N),
 	N < 3,
@@ -587,7 +578,26 @@ lag_vicini([H|T],Lag) :-
 	\+ member(H,Lag),
 	lag_vicini(T,Lag).*/
 
+/*
+laghi(T) :-
+	findall(Lago, lago(Lago), Laghi),
+	length(Laghi,T).
 
+lago(Lago) :-
+	a(X,Y,_),
+	lag(l(X,Y),[],l(X,Y),Lago).
+
+lag(l(Xi,Yi),Lag,l(X,Y),[l(X,Y)|Lag]) :- s(l(X,Y),l(Xi,Yi)).
+lag(l(Xi,Yi),Lag,l(X,Y),Lago) :-
+	findall(l(Xn,Yn),s(l(X,Y),l(Xn,Yn)),Vicini),
+        member(l(Xv,Yv),Vicini),
+	\+ member(l(Xv,Yv),Lag),
+	lag(l(Xi,Yi),[l(X,Y)|Lag],l(Xv,Yv),Lago).
+
+s(l(X,Y),l(Xv,Yv)) :-
+	a(Xv,Yv,_),
+	vicino(X/Y,Xv/Yv).
+*/
 %#######False minutiae##############à
 
 false_minutiae(T,B):-
