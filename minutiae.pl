@@ -39,7 +39,7 @@ isolato(X,Y,Ref) :-
 	findall(v(X,Y),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),[]),
 	send(Ref, colour, colour(green)).
 
-terminazioni(T,Terminazioni) :-
+terminazioni(T) :-
 	findall(t(X,Y),terminazione(X,Y,_),Terminazioni),
 	length(Terminazioni,T).
 
@@ -67,9 +67,10 @@ terminazioni_esterne_sx(X,Y) :-
             Xv < X .
 
 
-trova_tratti(X) :-
+trova_tratti(X1) :-
 	findall(t(X,Y),(terminazione(X,Y,_),tratto(t(X,Y),[],0)),Tratti),
-	length(Tratti,X).
+	length(Tratti,X),
+	X1 is X/2.
 
 
 tratti([],_).
@@ -81,7 +82,7 @@ tratti([T|C],Tratti) :-
 
 
 tratto(t(X,Y),Tratti,Acc) :-
-	Acc =< 50,
+	Acc =< 10,
 	a(X,Y,Ref),
 	calcolo_vicini(t(X,Y),N),
 	N < 3,
@@ -91,15 +92,15 @@ tratto(t(X,Y),Tratti,Acc) :-
 	Acc1 is Acc +1,
 	!,
 	tratto(t(Xv,Yv),[t(X,Y)|Tratti],Acc1),
-	send(Ref, colour, colour(pink)),
-	send(Ref, fill_pattern, colour(pink)).
+	send(Ref, colour, colour(green)),
+	send(Ref, fill_pattern, colour(green)).
 
 
 tratto(t(X,Y),_,_) :-
 	a(X,Y,Ref),
 	terminazione(X,Y,_),
-	send(Ref, colour, colour(pink)),
-	send(Ref, fill_pattern, colour(pink)).
+	send(Ref, colour, colour(green)),
+	send(Ref, fill_pattern, colour(green)).
 
 
 
