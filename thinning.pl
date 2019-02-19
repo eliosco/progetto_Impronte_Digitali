@@ -23,12 +23,6 @@ riempi_spazi_bianchi(Finestra):-
 	findall(v(X,Y),cerca_spazi_bianchi_orizzontali(X,Y,_, Finestra),_),
 	findall(v(X,Y),cerca_spazi_bianchi_verticali(X,Y,_, Finestra),_).
 
-riempi_spazi_bianchi_diagonali(Finestra):-
-	findall(v(X,Y),cerca_spazi_bianchi_diagonali_alto_sx(X,Y,_, Finestra),_),
-	findall(v(X,Y),cerca_spazi_bianchi_diagonali_alto_dx(X,Y,_, Finestra),_),
-	findall(v(X,Y),cerca_spazi_bianchi_diagonali_basso_sx(X,Y,_, Finestra),_),
-	findall(v(X,Y),cerca_spazi_bianchi_diagonali_basso_dx(X,Y,_, Finestra),_).
-
 cerca_spazi_bianchi_orizzontali(X,Y,Ref,Finestra):-
 	a(X,Y,Ref),
 	Xdx is (X+2),
@@ -68,10 +62,6 @@ cerca_spazi_bianchi_verticali(X,Y,Ref,Finestra):-
 	send(Ref2,colour,colour(black)),
 	send(Ref2,fill_pattern,colour(black)),
 	send(Finestra,display,Ref2,point((X*4),(Yd*4))).
-
-% NOTA: PER PULIRE MAGGIORMENTE L'IMMAGINE QUANDO SI INDIVIDUERANNO
-% FALSE MINUZIE AD UNA DISTANZA UGUALE A ZERO, SOSTITUIRE CON UNA SERIE
-% DI PIXEL CONTIGUI. :)
 
 
 % Predicato di riconoscimento dei pattern da correggere all'interno
