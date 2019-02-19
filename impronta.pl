@@ -22,9 +22,60 @@ disegna_impronta(FileName, Finestra) :- % FileName e Finestra istanziati
 	send(Finestra, open), % apre finestra
 	esamina_bmp(FileName,Stream,DimensioneImmagine,Larghezza),
 	carica_bmp(Finestra,Stream,DimensioneImmagine,Larghezza),
-        correggi_impronta(Finestra).
+        correggi_impronta(Finestra),
+	crea_file('file.txt'). % il file è impostato ad un file di default 'file.txt'
 	%false_minutiae(_,_).
 
+
+% consente di creare un file con i fatti a(X,Y,Ref) che rappresentano l
+% impronta
+crea_file(NomeFile) :-
+	tell(NomeFile),
+	listing(a),
+	told.
+
+% apre una finestra e disegna l impronta partendo dal file di default 'file.txt'
+disegna_impronta_da_file(Finestra) :-
+	new(Finestra, picture('Impronta Digitale')), % genera finestra
+	send(Finestra, size, size(600, 800)), % ne specifica dimensione
+	send(Finestra, open), % apre finestra
+	carica_file,
+	pro(Finestra).
+
+
+% consente di caricare il file con i fatti a(X,Y,Ref) che rappresentano
+% l impronta
+carica_file :-
+	open('file.txt',read,Stream),
+	repeat,
+	read(Stream,Fatti),
+	(   Fatti = end_of_file -> true
+	;
+	    assert(Fatti),
+	    fail
+	),
+	close(Stream),
+	!.
+
+% cicla i fatti a(X,Y,Ref) per poterli disegnare
+pro(Finestra) :-
+	findall(a(X,Y,Ref),a(X,Y,Ref),Lista),
+	draw(Lista,Finestra).
+
+% prende una lista di fatti a(X,Y,Ref) e li disegna sulla finestra aperta
+draw([],_) :-
+	!.
+draw([T|C],Finestra) :-
+       a(X,Y,Z) = T,
+       XC is X*4,
+       YC is Y*4,
+       new(Ref, box(4,4)),
+       retract(a(X,Y,Z)),
+       assert(a(X,Y,Ref)),
+       send(Ref, fill_pattern, colour(black)),
+       send(Finestra,display,Ref,point(XC,YC)),
+       draw(C,Finestra),
+       !.
 
 % visualizza a schermo i parametri del file.bmp caricato e restituisce:
 % IS: stream di input associato al FileName
