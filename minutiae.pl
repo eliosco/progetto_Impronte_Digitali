@@ -539,6 +539,13 @@ lag([l(X,Y,Ref)|T],Lag) :-
 	),
 	lag(T,NuovoLag).
 
+
+lag_vicini([],_).
+lag_vicini([H|T],Lag) :-
+	\+ member(H,Lag),
+	lag_vicini(T,Lag).*/
+	
+	
 %#######False minutiae##############à
 
 false_minutiae(T,B):-
@@ -617,12 +624,6 @@ biforcazionecoordinate(X,Y,Bif) :-
 	a(X,Y,_),
 	bif(X,Y,Bif).
 
-
-lag_vicini([],_).
-lag_vicini([H|T],Lag) :-
-	\+ member(H,Lag),
-	lag_vicini(T,Lag).
-*/
 
 
 
