@@ -39,9 +39,10 @@ isolato(X,Y,Ref) :-
 	findall(v(X,Y),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),[]),
 	send(Ref, colour, colour(green)).
 
-terminazioni(T) :-
+terminazioni(T,Terminazioni) :-
 	findall(t(X,Y),terminazione(X,Y,_),Terminazioni),
 	length(Terminazioni,T).
+
 
 % predicato per individuare le terminazioni interne all'impronta
 terminazione(X,Y,Ref) :-
@@ -62,8 +63,49 @@ terminazioni_esterne_dx(X,Y) :-
             Xv > X .
 
 terminazioni_esterne_sx(X,Y) :-
-	 a(Xv,Y,_),
+	    a(Xv,Y,_),
             Xv < X .
+
+
+trova_tratti(X) :-
+	findall(t(X,Y),(terminazione(X,Y,_),tratto(t(X,Y),[],0)),Tratti),
+	length(Tratti,X).
+
+
+tratti([],_).
+tratti([T|C],Tratti) :-
+
+	tratti(C,[Singolo_tratto|Tratti]),
+
+	tratto(T,Singolo_tratto,0).
+
+
+tratto(t(X,Y),Tratti,Acc) :-
+	Acc =< 50,
+	a(X,Y,Ref),
+	calcolo_vicini(t(X,Y),N),
+	N < 3,
+	vicino(X/Y,Xv/Yv),
+	a(Xv,Yv,_),
+        \+ member(t(Xv,Yv),Tratti),
+	Acc1 is Acc +1,
+	!,
+	tratto(t(Xv,Yv),[t(X,Y)|Tratti],Acc1),
+	send(Ref, colour, colour(pink)),
+	send(Ref, fill_pattern, colour(pink)).
+
+
+tratto(t(X,Y),_,_) :-
+	a(X,Y,Ref),
+	terminazione(X,Y,_),
+	send(Ref, colour, colour(pink)),
+	send(Ref, fill_pattern, colour(pink)).
+
+
+
+calcolo_vicini(t(X,Y),N) :-
+	findall(t(X,Y),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),L),
+	length(L,N).
 
 tratto_di_2(A,B,C,D,Ref1,Ref2) :-
 	terminazione(A,B,Ref1),
