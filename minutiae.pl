@@ -81,7 +81,7 @@ tratti([T|C],Tratti) :-
 
 
 tratto(t(X,Y),Tratti,Acc) :-
-	Acc =< 50,
+	Acc =< 10,
 	a(X,Y,Ref),
 	calcolo_vicini(t(X,Y),N),
 	N < 3,
