@@ -93,9 +93,9 @@ bif(X,Y,Bif) :-
 	%a(X,Y,Ref0),
 	X1 is X-1,
 	Y1 is Y-1,
-	X2 is X,
-	Y2 is Y-1,
-	\+ a(X2,Y2,_),
+	%X2 is X,
+	%Y2 is Y-1,
+	%\+ a(X2,Y2,_),
 	a(X1,Y1,Ref1),
 	X3 is X+1,
 	Y3 is Y-1,
@@ -114,9 +114,9 @@ bif(X,Y,Bif) :-
 	X7 is X-1,
 	Y7 is Y+1,
 	a(X7,Y7,Ref2),
-	X8 is X,
-	Y8 is Y+1,
-	\+ a(X8,Y8,_),
+	%X8 is X,
+	%Y8 is Y+1,
+	%\+ a(X8,Y8,_),
 	X9 is X+1,
 	Y9 is Y+1,
         a(X9,Y9,Ref3),
@@ -127,9 +127,9 @@ bif(X,Y,Bif) :-
 	X1 is X-1,
 	Y1 is Y-1,
 	a(X1,Y1,Ref1),
-	X4 is X-1,
-	Y4 is Y,
-	\+ a(X4,Y4,_),
+	%X4 is X-1,
+	%Y4 is Y,
+	%\+ a(X4,Y4,_),
 	X6 is X+1,
 	Y6 is Y,
 	a(X6,Y6,Ref2),
@@ -146,9 +146,9 @@ bif(X,Y,Bif) :-
 	X4 is X-1,
 	Y4 is Y,
 	a(X4,Y4,Ref2),
-	X6 is X+1,
-	Y6 is Y,
-	\+ a(X6,Y6,_),
+	%X6 is X+1,
+	%Y6 is Y,
+	%\+ a(X6,Y6,_),
 	X9 is X+1,
 	Y9 is Y+1,
 	a(X9,Y9,Ref3),
@@ -544,8 +544,8 @@ lag_vicini([],_).
 lag_vicini([H|T],Lag) :-
 	\+ member(H,Lag),
 	lag_vicini(T,Lag).*/
-	
-	
+
+
 %#######False minutiae##############à
 
 false_minutiae(T,B):-
