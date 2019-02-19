@@ -516,11 +516,34 @@ bif(X, Y, Bif):-
 	a(X9, Y9, Ref3),
 	Bif = [Ref1,Ref2,Ref3].
 /*
-eliminatutto :-
-	a(X,Y,Ref),
-	retract(a(X,Y,Ref)),
-	free(Ref).
+laghi(T) :-
+	findall(Lag, lago(Lag), Laghi),
+	length(Laghi,T).
 
+lago(Lag) :-
+	a(X,Y,Ref),
+	append([],[l(X,Y,Ref)],Lag),
+	lag([l(X,Y,Ref)],Lag),
+        %send(Ref,fill_pattern(colour(red))),
+	%send(Ref,colour(colour(red))).
+lag([],_).
+lag([l(X,Y,Ref)|T],Lag) :-
+	findall(l(Xv,Yv,Ref),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),Vicini),
+	(
+	lag_vicini(Vicini,Lag),
+	append(Lag,Vicini,NuovoLag),
+	lag(Vicini,NuovoLag)
+	;
+	send(Ref,colour(colour(green))),
+	send(Ref,fill_pattern(colour(green)))
+	),
+	lag(T,NuovoLag).
+
+
+lag_vicini([],_).
+lag_vicini([H|T],Lag) :-
+	\+ member(H,Lag),
+	lag_vicini(T,Lag).
 */
 
 
