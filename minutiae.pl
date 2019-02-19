@@ -65,11 +65,6 @@ terminazioni_esterne_sx(X,Y) :-
 	 a(Xv,Y,_),
             Xv < X .
 
-
-
-
-
-
 tratto_di_2(A,B,C,D,Ref1,Ref2) :-
 	terminazione(A,B,Ref1),
 	terminazione(C,D,Ref2),
@@ -79,14 +74,15 @@ biforcazioni(T) :-
 	findall(Bif, biforcazione(Bif), Biforcazioni),
 	length(Biforcazioni,T).
 
-biforcazione(Bif) :-
+biforcazione(Bif2) :-
 	a(X,Y,Ref),
 	bif(X,Y,Bif),
+	append(Bif,[Ref],Bif2),
 	%new(Colore,colour(red)),
         %send(Ref,colour,colour(red)),
-	send(Ref,colour(colour(red))),
-	send(Ref,fill_pattern(colour(red))),
-	colora_lista(Bif,colour(red)).
+	%send(Ref,colour(colour(red))),
+	%send(Ref,fill_pattern(colour(red))),
+	colora_lista(Bif2,colour(red)).
 
 %pattern 1
 bif(X,Y,Bif) :-
@@ -165,8 +161,9 @@ bif(X,Y,Bif) :-
 	%Y3 is Y-1,
 	%X4 is X,
 	%Y4 is Y,
-	%X5 is X+1,
-	%Y5 is Y,
+	X5 is X+1,
+	Y5 is Y,
+	\+ a(X5,Y5,_),
 	X6 is X+2,
 	Y6 is Y,
 	a(X6,Y6,Ref2),
@@ -188,8 +185,9 @@ bif(X,Y,Bif) :-
 	%Y3 is Y-1,
 	%X4 is X,
 	%Y4 is Y,
-	%X5 is X+1,
-	%Y5 is Y,
+	X5 is X+1,
+	Y5 is Y,
+	\+ a(X5,Y5,_),
 	X6 is X+2,
 	Y6 is Y,
 	a(X6,Y6,Ref1),
@@ -213,8 +211,9 @@ bif(X,Y,Bif) :-
 	%Y3 is Y-1,
 	%X4 is X,
 	%Y4 is Y,
-	%X5 is X+1,
-	%Y5 is Y,
+	X5 is X+1,
+	Y5 is Y,
+	\+ a(X5,Y5,_),
 	%X6 is X+2,
 	%Y6 is Y,
 	%X7 is X,
@@ -237,8 +236,9 @@ bif(X,Y,Bif) :-
 	%Y3 is Y-1,
 	%X4 is X-2,
 	%Y4 is Y,
-	%X5 is X-1,
-	%Y5 is Y,
+	X5 is X+1,
+	Y5 is Y,
+	\+ a(X5,Y5,_),
 	%X6 is X,
 	%Y6 is Y,
 	%X7 is X-2,
