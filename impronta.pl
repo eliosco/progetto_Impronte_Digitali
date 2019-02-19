@@ -1,7 +1,7 @@
 
 /*
  * Titolo:       impronta
- * Autore:       Aldo Franco Dragoni
+ * Autore:       Aldo Franco Dragoni - Team Intelligenza Artificiale
  * Creato:	 14 dicembre 2018
  * Linguaggio:	 SWI Prolog
  * Status:       1.0
@@ -167,11 +167,28 @@ colora_lista([H|T],Colore) :-
 dimensioni_impronta(Immagine,Altezza,Larghezza) :-
 	get(Immagine,height,Altezza),
 	get(Immagine,width,Larghezza).
+
+elimina_pixel(X,Y) :-
+	a(X,Y,Ref),
+	send(Ref,colour,colour(white)),
+	send(Ref,fill_pattern,colour(white)),
+	retract(a(X,Y,Ref)).
+
+eliminatutto :-
+	a(X,Y,Ref),
+	retract(a(X,Y,Ref)),
+	free(Ref).
 /*
-colorapixel(Ref,Colore) :-
-	send(Ref, colour, colour(Colore)),
-	send(Ref, fillpattern, colour(Colore)).
+test :- new(Immagine,image(@nil,300,300)),
+	new(Colore,colour,colour(black));
+        send(Immagine,pixel(150,150,Colore)),
+	new(Finestra, Immagine),
+	send(Finestra, size, size(500 , 500)),
+	send(Finestra, open).
 */
+
+
+
 
 
 
