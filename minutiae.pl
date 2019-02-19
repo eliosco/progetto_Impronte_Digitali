@@ -39,7 +39,7 @@ isolato(X,Y,Ref) :-
 	findall(v(X,Y),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),[]),
 	send(Ref, colour, colour(green)).
 
-terminazioni(T,Terminazioni) :-
+terminazioni(T) :-
 	findall(t(X,Y),terminazione(X,Y,_),Terminazioni),
 	length(Terminazioni,T).
 
@@ -66,10 +66,10 @@ terminazioni_esterne_sx(X,Y) :-
 	    a(Xv,Y,_),
             Xv < X .
 
-
-tratti(X) :-
+trova_tratti(X1) :-
 	findall(t(X,Y),(terminazione(X,Y,_),tratto(t(X,Y),[],0)),Tratti),
-	length(Tratti,X/2).
+	length(Tratti,X),
+	X1 is X/2.
 
 tratto(t(X,Y),Tratti,Acc) :-
 	Acc =< 10,
@@ -82,15 +82,15 @@ tratto(t(X,Y),Tratti,Acc) :-
 	Acc1 is Acc +1,
 	!,
 	tratto(t(Xv,Yv),[t(X,Y)|Tratti],Acc1),
-	send(Ref, colour, colour(pink)),
-	send(Ref, fill_pattern, colour(pink)).
+	send(Ref, colour, colour(green)),
+	send(Ref, fill_pattern, colour(green)).
 
 
 tratto(t(X,Y),_,_) :-
 	a(X,Y,Ref),
 	terminazione(X,Y,_),
-	send(Ref, colour, colour(pink)),
-	send(Ref, fill_pattern, colour(pink)).
+	send(Ref, colour, colour(green)),
+	send(Ref, fill_pattern, colour(green)).
 
 
 
@@ -675,6 +675,17 @@ trova_false_bt(t(X1,Y1,Bif),t(X2,Y2)):-
 biforcazionecoordinate(X,Y,Bif) :-
 	a(X,Y,_),
 	bif(X,Y,Bif).
+
+
+
+
+
+
+
+
+
+
+
 
 
 
