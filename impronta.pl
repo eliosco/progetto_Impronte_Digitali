@@ -1,7 +1,7 @@
 
 /*
  * Titolo:       impronta
- * Autore:       Aldo Franco Dragoni
+ * Autore:       Aldo Franco Dragoni - Team Intelligenza Artificiale
  * Creato:	 14 dicembre 2018
  * Linguaggio:	 SWI Prolog
  * Status:       1.0
@@ -22,7 +22,8 @@ disegna_impronta(FileName, Finestra) :- % FileName e Finestra istanziati
 	send(Finestra, open), % apre finestra
 	esamina_bmp(FileName,Stream,DimensioneImmagine,Larghezza),
 	carica_bmp(Finestra,Stream,DimensioneImmagine,Larghezza),
-        correggi_impronta(Finestra).
+        correggi_impronta(Finestra),
+	false_minutiae(_,_).
 
 
 % visualizza a schermo i parametri del file.bmp caricato e restituisce:
@@ -166,11 +167,22 @@ colora_lista([H|T],Colore) :-
 dimensioni_impronta(Immagine,Altezza,Larghezza) :-
 	get(Immagine,height,Altezza),
 	get(Immagine,width,Larghezza).
-/*
-colorapixel(Ref,Colore) :-
-	send(Ref, colour, colour(Colore)),
-	send(Ref, fillpattern, colour(Colore)).
-*/
+
+elimina_pixel(X,Y) :-
+	a(X,Y,Ref),
+	send(Ref,colour,colour(white)),
+	send(Ref,fill_pattern,colour(white)),
+	retract(a(X,Y,Ref)).
+
+eliminatutto :-
+	a(X,Y,Ref),
+	retract(a(X,Y,Ref)),
+	free(Ref).
+
+
+
+
+
 
 
 

@@ -1,10 +1,10 @@
 /*
  * Titolo:       minutiae
- * Autore:       Aldo Franco Dragoni
+ * Autore:       Aldo Franco Dragoni - Team Intelligenza Artificale
  * Creato:	 14 dicembre 2018
  * Linguaggio:	 SWI Prolog
  * Status:       1.0
- * Descrizione:  programma esempio per eterminare le minuzie all'interno
+ * Descrizione:  funzionalità determinare le minuzie all'interno
  * di una impronta digitale
  */
 
@@ -120,353 +120,6 @@ tratto_di_2(A,B,C,D,Ref1,Ref2) :-
 	terminazione(C,D,Ref2),
 	vicino(A/B,C/D).
 
-% Predicato per migliorare il thinning di base dell'impronta, inserendo
-% preventivamente pixel laddove vi erano spazi bianchi verticali od
-% orizzonali, al fine di assottigliarla nel miglior modo possibile
-correggi_impronta(Finestra):-
-	riempi_spazi_bianchi(Finestra),
-	thinning(Finestra),
-	riempi_spazi_bianchi(Finestra),
-	thinning(Finestra),
-	perfezionamento(Finestra).
-
-% Predicato di riconoscimento dei pattern da correggere all'interno
-% dell'immagine bitmap localizzati in finestre 3x3 pixels
-thinning(Finestra):-
-	findall(X/Y,canc_T_up(X,Y,_,Finestra),_),
-	findall(X/Y,canc_T_down(X,Y,_,Finestra),_),
-	findall(X/Y,canc_T_dx(X,Y,_,Finestra),_),
-	findall(X/Y,canc_T_sx(X,Y,_,Finestra),_),
-	findall(X/Y,canc_L1(X,Y,_,Finestra),_),
-	findall(X/Y,canc_L2(X,Y,_,Finestra),_),
-	findall(X/Y,canc_L3(X,Y,_,Finestra),_),
-	findall(X/Y,canc_L4(X,Y,_,Finestra),_).
-
-%|_|_|_|
-%| |X| |
-%|X|X|X|
-canc_T_up(X,Y,Ref,_):-
-	a(X,Y,Ref),
-	Xdx is X+1,
-	Xsx is X-1,
-	Yu is Y-1,
-	Yd is Y+1,
-	a(X,Yd,_),
-	a(Xdx,Yd,_),
-	a(Xsx,Yd,_),
-	\+ a(X,Yu,_),
-	\+ a(Xdx,Yu,_),
-	\+ a(Xsx,Yu,_),
-	retract(a(X,Y,Ref)),
-	%send(Ref,colour,colour(red)),
-	%send(Ref,fill_pattern,colour(red)).
-	free(Ref).
-
-%|X|X|X|
-%| |X| |
-%|_|_|_|
-canc_T_down(X,Y,Ref,_):-
-	a(X,Y,Ref),
-	Xdx is X+1,
-	Xsx is X-1,
-	Yu is Y-1,
-	Yd is Y+1,
-	a(X,Yu,_),
-	a(Xdx,Yu,_),
-	a(Xsx,Yu,_),
-	\+ a(X,Yd,_),
-	\+ a(Xdx,Yd,_),
-	\+ a(Xsx,Yd,_),
-	retract(a(X,Y,Ref)),
-	%send(Ref,colour,colour(red)),
-	%send(Ref,fill_pattern,colour(red)).
-	free(Ref).
-
-%|X| |_|
-%|X|X|_|
-%|X| |_|
-canc_T_dx(X,Y,Ref,_):-
-	a(X,Y,Ref),
-	Xdx is X+1,
-	Xsx is X-1,
-	Yu is Y-1,
-	Yd is Y+1,
-	a(Xsx,Y,_),
-	a(Xsx,Yu,_),
-	a(Xsx,Yd,_),
-	\+ a(Xdx,Y,_),
-	\+ a(Xdx,Yu,_),
-	\+ a(Xdx,Yd,_),
-	retract(a(X,Y,Ref)),
-	%send(Ref,colour,colour(red)),
-	%send(Ref,fill_pattern,colour(red)).
-	free(Ref).
-
-%|_| |X|
-%|_|X|X|
-%|_| |X|
-canc_T_sx(X,Y,Ref,_):-
-	a(X,Y,Ref),
-	Xdx is X+1,
-	Xsx is X-1,
-	Yu is Y-1,
-	Yd is Y+1,
-	a(Xdx,Y,_),
-	a(Xdx,Yu,_),
-	a(Xdx,Yd,_),
-	\+ a(Xsx,Y,_),
-	\+ a(Xsx,Yu,_),
-	\+ a(Xsx,Yd,_),
-	retract(a(X,Y,Ref)),
-	%send(Ref,colour,colour(red)),
-	%send(Ref,fill_pattern,colour(red)).
-	free(Ref).
-
-%| |X| |
-%|_|X|X|
-%|_|_| |
-canc_L1(X,Y,Ref,_):-
-	a(X,Y,Ref),
-	Xdx is X+1,
-	Xsx is X-1,
-	Yu is Y-1,
-	Yd is Y+1,
-	a(Xdx,Y,_),
-	a(X,Yu,_),
-	\+ a(Xsx,Y,_),
-	\+ a(Xsx,Yd,_),
-	\+ a(X,Yd,_),
-	retract(a(X,Y,Ref)),
-	%send(Ref,colour,colour(red)),
-	%send(Ref,fill_pattern,colour(red)).
-	free(Ref).
-
-%| |X| |
-%|X|X|_|
-%| |_|_|
-canc_L2(X,Y,Ref,_):-
-	a(X,Y,Ref),
-	Xdx is X+1,
-	Xsx is X-1,
-	Yu is Y-1,
-	Yd is Y+1,
-	a(Xsx,Y,_),
-	a(X,Yu,_),
-	\+ a(Xdx,Y,_),
-	\+ a(Xdx,Yd,_),
-	\+ a(X,Yd,_),
-	retract(a(X,Y,Ref)),
-	%send(Ref,colour,colour(red)),
-	%send(Ref,fill_pattern,colour(red)).
-	free(Ref).
-
-%|_|_| |
-%|_|X|X|
-%| |X| |
-canc_L3(X,Y,Ref,_):-
-	a(X,Y,Ref),
-	Xdx is X+1,
-	Xsx is X-1,
-	Yu is Y-1,
-	Yd is Y+1,
-	a(Xdx,Y,_),
-	a(X,Yd,_),
-	\+ a(X,Yu,_),
-	\+ a(Xsx,Yu,_),
-	\+ a(Xsx,Y,_),
-	retract(a(X,Y,Ref)),
-	%send(Ref,colour,colour(red)),
-	%send(Ref,fill_pattern,colour(red)).
-	free(Ref).
-
-%| |_|_|
-%|X|X|_|
-%| |X| |
-canc_L4(X,Y,Ref,_):-
-	a(X,Y,Ref),
-	Xdx is X+1,
-	Xsx is X-1,
-	Yu is Y-1,
-	Yd is Y+1,
-	a(Xsx,Y,_),
-	a(X,Yd,_),
-	\+ a(X,Yu,_),
-	\+ a(Xdx,Yu,_),
-	\+ a(Xdx,Y,_),
-	retract(a(X,Y,Ref)),
-	%send(Ref,colour,colour(red)),
-	%send(Ref,fill_pattern,colour(red)).
-	free(Ref).
-
-% Predicato in grado di trovare ulteriori pattern da correggere
-% all'interno dell'immagine bitmap
-perfezionamento(Finestra):-
-	findall(X/Y,perfez1(X,Y,_,Finestra),_),
-	findall(X/Y,perfez2(X,Y,_,Finestra),_),
-	findall(X/Y,perfez3(X,Y,_,Finestra),_),
-	findall(X/Y,perfez4(X,Y,_,Finestra),_).
-
-%|_|_|X|   |_|_| |
-%|_|X|X|   |_|X|X|
-%|_|_| |   |_|_|X|
-perfez1(X,Y,Ref,_):-
-	a(X,Y,Ref),
-	Xdx is X+1,
-	Xsx is X-1,
-	Yu is Y-1,
-	Yd is Y+1,
-	a(Xdx,Y,_),
-	(   a(Xdx,Yu,_)
-	;
-	    a(Xdx,Yd,_)),
-	\+ a(X,Yu,_),
-	\+ a(Xsx,Yu,_),
-	\+ a(Xsx,Y,_),
-	\+ a(Xsx,Yd,_),
-	\+ a(X,Yd,_),
-	retract(a(X,Y,Ref)),
-	%send(Ref,colour,colour(red)),
-	%send(Ref,fill_pattern,colour(red)).
-	free(Ref).
-
-%| |_|_|   |X|_|_|
-%|X|X|_|   |X|X|_|
-%|X|_| |   | |_|_|
-perfez2(X,Y,Ref,_):-
-	a(X,Y,Ref),
-	Xdx is X+1,
-	Xsx is X-1,
-	Yu is Y-1,
-	Yd is Y+1,
-	a(Xsx,Y,_),
-	(   a(Xsx,Yu,_)
-	;
-	    a(Xsx,Yd,_)),
-	\+ a(X,Yu,_),
-	\+ a(Xdx,Yu,_),
-	\+ a(Xdx,Y,_),
-	\+ a(Xdx,Yd,_),
-	\+ a(X,Yd,_),
-	retract(a(X,Y,Ref)),
-	%send(Ref,colour,colour(red)),
-	%send(Ref,fill_pattern,colour(red)).
-	free(Ref).
-
-%| |X|X|   |X|X| |
-%|_|X|_|   |_|X|_|
-%|_|_|_|   |_|_|_|
-perfez3(X,Y,Ref,_):-
-	a(X,Y,Ref),
-	Xdx is X+1,
-	Xsx is X-1,
-	Yu is Y-1,
-	Yd is Y+1,
-	a(X,Yu,_),
-	(   a(Xdx,Yu,_)
-	;
-	    a(Xsx,Yu,_)),
-	\+ a(Xsx,Y,_),
-	\+ a(Xsx,Yd,_),
-	\+ a(X,Yd,_),
-	\+ a(Xdx,Yd,_),
-	\+ a(Xdx,Y,_),
-	retract(a(X,Y,Ref)),
-	%send(Ref,colour,colour(red)),
-	%send(Ref,fill_pattern,colour(red)).
-	free(Ref).
-
-%|_|_|_|   |_|_|_|
-%|_|X|_|   |_|X|_|
-%| |X|X|   |X|X| |
-perfez4(X,Y,Ref,_):-
-	a(X,Y,Ref),
-	Xdx is X+1,
-	Xsx is X-1,
-	Yu is Y-1,
-	Yd is Y+1,
-	a(X,Yd,_),
-	(   a(Xdx,Yd,_)
-	;
-	    a(Xsx,Yd,_)),
-	\+ a(Xsx,Y,_),
-	\+ a(Xsx,Yu,_),
-	\+ a(X,Yu,_),
-	\+ a(Xdx,Yu,_),
-	\+ a(Xdx,Y,_),
-	retract(a(X,Y,Ref)),
-	%send(Ref,colour,colour(red)),
-	%send(Ref,fill_pattern,colour(red)).
-	free(Ref).
-
-
-
-
-
-
-
-%predicato per riempire gli spazi bianchi che creano dei buchi
-riempi_spazi_bianchi(Finestra):-
-	findall(v(X,Y),cerca_spazi_bianchi_orizzontali(X,Y,_, Finestra),_),
-	findall(v(X,Y),cerca_spazi_bianchi_verticali(X,Y,_, Finestra),_).
-
-riempi_spazi_bianchi_diagonali(Finestra):-
-	findall(v(X,Y),cerca_spazi_bianchi_diagonali_alto_sx(X,Y,_, Finestra),_),
-	findall(v(X,Y),cerca_spazi_bianchi_diagonali_alto_dx(X,Y,_, Finestra),_),
-	findall(v(X,Y),cerca_spazi_bianchi_diagonali_basso_sx(X,Y,_, Finestra),_),
-	findall(v(X,Y),cerca_spazi_bianchi_diagonali_basso_dx(X,Y,_, Finestra),_).
-
-cerca_spazi_bianchi_orizzontali(X,Y,Ref,Finestra):-
-	a(X,Y,Ref),
-	Xdx is (X+2),
-	YUp is (Y-1),
-	YDown is (Y+1),
-	X1 is X+1,
-	(a(Xdx,Y,_)
-	;
-	(   a(Xdx,YUp,_),
-	    \+ a(X1,YUp,_))
-	;
-	(   a(Xdx,YDown,_),
-	    \+ a(X1,YDown,_))),
-	\+ a(X1,Y,_),
-	new(Ref1, box(4,4)),
-	assert(a(X1,Y,Ref1)),
-	send(Ref1,colour,colour(black)),
-	send(Ref1,fill_pattern,colour(black)),
-	send(Finestra,display,Ref1,point((X1*4),(Y*4))).
-
-cerca_spazi_bianchi_verticali(X,Y,Ref,Finestra):-
-	a(X,Y,Ref),
-	YDown is (Y+2),
-	Yd is Y+1,
-	XSx is (X-1),
-	XDx is (X+1),
-	(a(X,YDown,_)
-	;
-	(   a(XSx,YDown,_),
-	    \+ a(XSx,Yd,_))
-	;
-	(   a(XDx,YDown,_),
-	    \+ a(XDx,Yd,_))),
-	\+ a(X,Yd,_),
-	new(Ref2, box(4,4)),
-	assert(a(X,Yd,Ref2)),
-	send(Ref2,colour,colour(black)),
-	send(Ref2,fill_pattern,colour(black)),
-	send(Finestra,display,Ref2,point((X*4),(Yd*4))).
-
-
-
-elimina_pixel(X,Y) :-
-	a(X,Y,Ref),
-	send(Ref,colour,colour(white)),
-	send(Ref,fill_pattern,colour(white)),
-	retract(a(X,Y,Ref)).
-
-% NOTA: PER PULIRE MAGGIORMENTE L'IMMAGINE QUANDO SI INDIVIDUERANNO
-% FALSE MINUZIE AD UNA DISTANZA UGUALE A ZERO, SOSTITUIRE CON UNA SERIE
-% DI PIXEL CONTIGUI. :)
-
 biforcazioni(T) :-
 	findall(Bif, biforcazione(Bif), Biforcazioni),
 	length(Biforcazioni,T).
@@ -480,94 +133,14 @@ biforcazione(Bif) :-
 	send(Ref,fill_pattern(colour(red))),
 	colora_lista(Bif,colour(red)).
 
-laghi(T) :-
-	findall(Lag,lago(Lag),Laghi),
-	length(Laghi,T).
-
-lago(VRef1) :-
-	a(X,Y,Ref1),
-	a(W,Z,Ref2),
-	lag(X,Y,VRef1,W,Z,VRef2),
-        send(Ref1,colour,colour(red)),
-	send(Ref2,colour,colour(red)),
-	colora_lista(VRef1),
-	colora_lista(VRef2).
-
-
-lag(X,Y,VRef1,W,Z,VRef2) :-
-	semilago_nord(X,Y,VRef1),
-	semilago_sud(W,Z,VRef2),
-	distanza(X,Y,W,Z,Dist_oriz,Dist_vert)
-	%Dist_oriz =< 5,
-	%Dist_vert =< 20
-	;
-	semilago_ovest(X,Y,VRef1),
-	semilago_est(W,Z,VRef2),
-	distanza(X,Y,W,Z,Dist_oriz,Dist_vert).
-	%Dist_oriz =< 20,
-	%Dist_vert =< 5.
-
-distanza(X,Y,W,Z,Dist_oriz,Dist_vert) :-
-	Dist_oriz  is abs(X-W),
-	Dist_vert is abs(Y-Z).
-
-semilago_sud(X,Y,VRef) :-
-	X1 is X-1,
-	Y1 is Y-1,
-	a(X1,Y1,Ref1),
-	X3 is X+1,
-	Y3 is Y-1,
-	a(X3,Y3,Ref2),
-	X8 is X,
-	Y8 is Y+1,
-	a(X8,Y8,Ref3),
-	VRef = [Ref1,Ref2,Ref3].
-
-semilago_nord(X,Y,VRef) :-
-	X2 is X,
-	Y2 is Y-1,
-	a(X2,Y2,Ref1),
-	X7 is X-1,
-	Y7 is Y+1,
-	a(X7,Y7,Ref2),
-	X9 is X+1,
-	Y9 is Y+1,
-        a(X9,Y9,Ref3),
-        VRef = [Ref1,Ref2,Ref3].
-
-semilago_est(X,Y,VRef) :-
-	X1 is X-1,
-	Y1 is Y-1,
-	a(X1,Y1,Ref1),
-	X6 is X+1,
-	Y6 is Y,
-	a(X6,Y6,Ref2),
-	X7 is X-1,
-	Y7 is Y+1,
-	a(X7,Y7,Ref3),
-	VRef = [Ref1,Ref2,Ref3].
-
-semilago_ovest(X,Y,VRef) :-
-	X3 is X+1,
-	Y3 is Y-1,
-	a(X3,Y3,Ref1),
-	X4 is X-1,
-	Y4 is Y,
-	a(X4,Y4,Ref2),
-	X9 is X+1,
-	Y9 is Y+1,
-	a(X9,Y9,Ref3),
-	VRef = [Ref1,Ref2,Ref3].
-
-
 %pattern 1
 bif(X,Y,Bif) :-
 	%a(X,Y,Ref0),
 	X1 is X-1,
 	Y1 is Y-1,
-	X2 is X,
-	Y2 is Y-1,
-	\+ a(X2,Y2,_),
+	%X2 is X,
+	%Y2 is Y-1,
+	%\+ a(X2,Y2,_),
 	a(X1,Y1,Ref1),
 	X3 is X+1,
 	Y3 is Y-1,
@@ -586,9 +159,9 @@ bif(X,Y,Bif) :-
 	X7 is X-1,
 	Y7 is Y+1,
 	a(X7,Y7,Ref2),
-	X8 is X,
-	Y8 is Y+1,
-	\+ a(X8,Y8,_),
+	%X8 is X,
+	%Y8 is Y+1,
+	%\+ a(X8,Y8,_),
 	X9 is X+1,
 	Y9 is Y+1,
         a(X9,Y9,Ref3),
@@ -599,9 +172,9 @@ bif(X,Y,Bif) :-
 	X1 is X-1,
 	Y1 is Y-1,
 	a(X1,Y1,Ref1),
-	X4 is X-1,
-	Y4 is Y,
-	\+ a(X4,Y4,_),
+	%X4 is X-1,
+	%Y4 is Y,
+	%\+ a(X4,Y4,_),
 	X6 is X+1,
 	Y6 is Y,
 	a(X6,Y6,Ref2),
@@ -618,9 +191,9 @@ bif(X,Y,Bif) :-
 	X4 is X-1,
 	Y4 is Y,
 	a(X4,Y4,Ref2),
-	X6 is X+1,
-	Y6 is Y,
-	\+ a(X6,Y6,_),
+	%X6 is X+1,
+	%Y6 is Y,
+	%\+ a(X6,Y6,_),
 	X9 is X+1,
 	Y9 is Y+1,
 	a(X9,Y9,Ref3),
@@ -987,13 +560,114 @@ bif(X, Y, Bif):-
 	a(X8, Y8, Ref2),
 	a(X9, Y9, Ref3),
 	Bif = [Ref1,Ref2,Ref3].
+/*
+laghi(T) :-
+	findall(Lag, lago(Lag), Laghi),
+	length(Laghi,T).
 
-
-eliminatutto :-
+lago(Lag) :-
 	a(X,Y,Ref),
-	retract(a(X,Y,Ref)),
-	free(Ref).
+	append([],[l(X,Y,Ref)],Lag),
+	lag([l(X,Y,Ref)],Lag),
+        %send(Ref,fill_pattern(colour(red))),
+	%send(Ref,colour(colour(red))).
+lag([],_).
+lag([l(X,Y,Ref)|T],Lag) :-
+	findall(l(Xv,Yv,Ref),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),Vicini),
+	(
+	lag_vicini(Vicini,Lag),
+	append(Lag,Vicini,NuovoLag),
+	lag(Vicini,NuovoLag)
+	;
+	send(Ref,colour(colour(green))),
+	send(Ref,fill_pattern(colour(green)))
+	),
+	lag(T,NuovoLag).
 
+
+lag_vicini([],_).
+lag_vicini([H|T],Lag) :-
+	\+ member(H,Lag),
+	lag_vicini(T,Lag).*/
+
+
+%#######False minutiae##############à
+
+false_minutiae(T,B):-
+	trova_minutiae_biforc_term,
+	trova_minutiae_biforcazioni,
+	trova_minutiae_terminazioni,
+	terminazioni(T),
+	biforcazioni(B).
+
+%false minutiae
+% innanzitutto ho bisogno di un predicato che calcoli la distanza tra
+% due minutie qualsiasi(due biforcazioni, due terminazioni, una bif
+% una terminazione).
+distanza_minutiae(Xa/Ya,Xb/Yb,Distanza):-
+	Xdiff is Xb-Xa,
+	Ydiff is Yb-Ya,
+	XQ is Xdiff^2,
+	YQ is Ydiff^2,
+	Dist is XQ+YQ,
+	Distanza is sqrt(Dist).
+
+% di seguito mi occorre calcolare la distanza media tra due creste D,
+% che si ottiene riga per riga:
+% 1-scannerizzando la riga e sommando tutti i pixel il cui valore è
+% 1(neri)
+% 2- Divido la lunghezza della riga per la somma ottenuta, il risultato
+% sarà D per quella riga.
+% 3- Ripeto procedimento per tutte le righe e faccio la media per
+% ottenere la distanza media tra due creste D(average inter-rigde
+% width).
+%
+% Per ora metto D=6
+trova_minutiae_terminazioni :-
+	findall(t(X,Y),trova_false_terminazioni(t(X,Y),t(_,_)),_).
+
+trova_false_terminazioni(t(X1,Y1),t(X2,Y2)):-
+	terminazione(X1,Y1,_),
+	terminazione(X2,Y2,_),
+	X1\=X2,
+	Y1\=Y2,
+	distanza_minutiae(X1/Y1,X2/Y2,Distanza),
+	Distanza =<6,
+	retract(a(X1,Y2,_)),
+	retract(a(X2,Y2,_)).
+
+%facciamo stessa cosa per due biforcazioni
+trova_minutiae_biforcazioni :-
+	findall(t(X,Y,Bif),trova_false_biforcazioni(t(X,Y,Bif),t(_,_,_)),_).
+
+trova_false_biforcazioni(t(X1,Y1,Bif),t(X2,Y2,Bif2)):-
+	biforcazionecoordinate(X1,Y1,Bif),
+	biforcazionecoordinate(X2,Y2,Bif2),
+	X1\=X2,
+	Y1\=Y2,
+	Bif\=Bif2,
+	distanza_minutiae(X1/Y1,X2/Y2,Distanza),
+	Distanza=<6,
+	retract(a(X1,Y1,_)),
+	retract(a(X2,Y2,_)).
+
+%facciamo stessa cosa per una biforcazione e una terminazione
+trova_minutiae_biforc_term :-
+	findall(t(X,Y,Bif),trova_false_bt(t(X,Y,Bif),t(_,_)),_).
+
+trova_false_bt(t(X1,Y1,Bif),t(X2,Y2)):-
+	biforcazionecoordinate(X1,Y1,Bif),
+	terminazione(X2,Y2,_),
+	X1\=X2,
+	Y1\=Y2,
+	distanza_minutiae(X1/Y1,X2/Y2,Distanza),
+	Distanza=<6,
+	retract(a(X1,Y1,_)),
+	retract(a(X2,Y2,_)).
+
+biforcazionecoordinate(X,Y,Bif) :-
+	a(X,Y,_),
+	bif(X,Y,Bif).
 
 
 
