@@ -548,56 +548,7 @@ bif(X, Y, Bif):-
 	a(X8, Y8, Ref2),
 	a(X9, Y9, Ref3),
 	Bif = [Ref1,Ref2,Ref3].
-/*
-laghi(T) :-
-	findall(Lag, lago(Lag), Laghi),
-	length(Laghi,T).
 
-lago(Lag) :-
-	a(X,Y,Ref),
-	append([],[l(X,Y,Ref)],Lag),
-	lag([l(X,Y,Ref)],Lag),
-        %send(Ref,fill_pattern(colour(red))),
-	%send(Ref,colour(colour(red))).
-lag([],_).
-lag([l(X,Y,Ref)|T],Lag) :-
-	findall(l(Xv,Yv,Ref),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),Vicini),
-	(
-	lag_vicini(Vicini,Lag),
-	append(Lag,Vicini,NuovoLag),
-	lag(Vicini,NuovoLag)
-	;
-	send(Ref,colour(colour(green))),
-	send(Ref,fill_pattern(colour(green)))
-	),
-	lag(T,NuovoLag).
-
-
-lag_vicini([],_).
-lag_vicini([H|T],Lag) :-
-	\+ member(H,Lag),
-	lag_vicini(T,Lag).*/
-
-/*
-laghi(T) :-
-	findall(Lago, lago(Lago), Laghi),
-	length(Laghi,T).
-
-lago(Lago) :-
-	a(X,Y,_),
-	lag(l(X,Y),[],l(X,Y),Lago).
-
-lag(l(Xi,Yi),Lag,l(X,Y),[l(X,Y)|Lag]) :- s(l(X,Y),l(Xi,Yi)).
-lag(l(Xi,Yi),Lag,l(X,Y),Lago) :-
-	findall(l(Xn,Yn),s(l(X,Y),l(Xn,Yn)),Vicini),
-        member(l(Xv,Yv),Vicini),
-	\+ member(l(Xv,Yv),Lag),
-	lag(l(Xi,Yi),[l(X,Y)|Lag],l(Xv,Yv),Lago).
-
-s(l(X,Y),l(Xv,Yv)) :-
-	a(Xv,Yv,_),
-	vicino(X/Y,Xv/Yv).
-*/
 %#######False minutiae##############à
 
 false_minutiae(T,B):-
