@@ -22,12 +22,9 @@ disegna_impronta(FileName, Finestra) :- % FileName e Finestra istanziati
 	send(Finestra, open), % apre finestra
 	esamina_bmp(FileName,Stream,DimensioneImmagine,Larghezza),
 	carica_bmp(Finestra,Stream,DimensioneImmagine,Larghezza),
-<<<<<<< HEAD
         correggi_impronta(Finestra).
-=======
-        correggi_impronta(Finestra),
 	crea_file('file.txt'). % il file è impostato ad un file di default 'file.txt'
-	%false_minutiae(_,_).
+	
 
 
 % consente di creare un file con i fatti a(X,Y,Ref) che rappresentano l
