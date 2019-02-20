@@ -4,7 +4,7 @@
  * Creato:	 14 dicembre 2018
  * Linguaggio:	 SWI Prolog
  * Status:       1.0
- * Descrizione:  funzionalità determinare le minuzie all'interno
+ * Descrizione:  funzionalitï¿½ determinare le minuzie all'interno
  * di una impronta digitale
  */
 
@@ -39,7 +39,7 @@ isolato(X,Y,Ref) :-
 	findall(v(X,Y),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),[]),
 	send(Ref, colour, colour(green)).
 
-terminazioni(T,Terminazioni) :-
+terminazioni(T) :-
 	findall(t(X,Y),terminazione(X,Y,_),Terminazioni),
 	length(Terminazioni,T).
 
@@ -66,13 +66,10 @@ terminazioni_esterne_sx(X,Y) :-
 	    a(Xv,Y,_),
             Xv < X .
 
-
-tratti(X1) :-
+trova_tratti(X1) :-
 	findall(t(X,Y),(terminazione(X,Y,_),tratto(t(X,Y),[],0)),Tratti),
 	length(Tratti,X),
 	X1 is X/2.
-
-
 
 tratto(t(X,Y),Tratti,Acc) :-
 	Acc =< 10,
@@ -85,15 +82,15 @@ tratto(t(X,Y),Tratti,Acc) :-
 	Acc1 is Acc +1,
 	!,
 	tratto(t(Xv,Yv),[t(X,Y)|Tratti],Acc1),
-	send(Ref, colour, colour(pink)),
-	send(Ref, fill_pattern, colour(pink)).
+	send(Ref, colour, colour(green)),
+	send(Ref, fill_pattern, colour(green)).
 
 
 tratto(t(X,Y),_,_) :-
 	a(X,Y,Ref),
 	terminazione(X,Y,_),
-	send(Ref, colour, colour(pink)),
-	send(Ref, fill_pattern, colour(pink)).
+	send(Ref, colour, colour(green)),
+	send(Ref, fill_pattern, colour(green)).
 
 
 
@@ -633,8 +630,27 @@ lag_vicini([H|T],Lag) :-
 	\+ member(H,Lag),
 	lag_vicini(T,Lag).*/
 
+/*
+laghi(T) :-
+	findall(Lago, lago(Lago), Laghi),
+	length(Laghi,T).
 
-%#######False minutiae##############à
+lago(Lago) :-
+	a(X,Y,_),
+	lag(l(X,Y),[],l(X,Y),Lago).
+
+lag(l(Xi,Yi),Lag,l(X,Y),[l(X,Y)|Lag]) :- s(l(X,Y),l(Xi,Yi)).
+lag(l(Xi,Yi),Lag,l(X,Y),Lago) :-
+	findall(l(Xn,Yn),s(l(X,Y),l(Xn,Yn)),Vicini),
+        member(l(Xv,Yv),Vicini),
+	\+ member(l(Xv,Yv),Lag),
+	lag(l(Xi,Yi),[l(X,Y)|Lag],l(Xv,Yv),Lago).
+
+s(l(X,Y),l(Xv,Yv)) :-
+	a(Xv,Yv,_),
+	vicino(X/Y,Xv/Yv).
+*/
+%#######False minutiae##############ï¿½
 
 false_minutiae(T,B):-
 	trova_minutiae_biforc_term,
@@ -657,10 +673,10 @@ distanza_minutiae(Xa/Ya,Xb/Yb,Distanza):-
 
 % di seguito mi occorre calcolare la distanza media tra due creste D,
 % che si ottiene riga per riga:
-% 1-scannerizzando la riga e sommando tutti i pixel il cui valore è
+% 1-scannerizzando la riga e sommando tutti i pixel il cui valore ï¿½
 % 1(neri)
 % 2- Divido la lunghezza della riga per la somma ottenuta, il risultato
-% sarà D per quella riga.
+% sarï¿½ D per quella riga.
 % 3- Ripeto procedimento per tutte le righe e faccio la media per
 % ottenere la distanza media tra due creste D(average inter-rigde
 % width).
@@ -711,6 +727,17 @@ trova_false_bt(t(X1,Y1,Bif),t(X2,Y2)):-
 biforcazionecoordinate(X,Y,Bif) :-
 	a(X,Y,_),
 	bif(X,Y,Bif).
+
+
+
+
+
+
+
+
+
+
+
 
 
 
