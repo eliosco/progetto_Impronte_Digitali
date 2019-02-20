@@ -4,7 +4,11 @@
  * Creato:	 14 dicembre 2018
  * Linguaggio:	 SWI Prolog
  * Status:       1.0
+<<<<<<< HEAD
+ * Descrizione:  funzionalit� determinare le minuzie all'interno
+=======
  * Descrizione:  funzionalitÃ  determinare le minuzie all'interno
+>>>>>>> 06a662cf407dcc2f263fe6ce1aa4a3f8b6d4e5bf
  * di una impronta digitale
  */
 
@@ -576,12 +580,22 @@ lago(t(X,Y),Semi_laghi,Acc) :-
 	a(X,Y,_),
 	vicino(X/Y,Xv/Yv),
 	a(Xv,Yv,_),
+<<<<<<< HEAD
 	\+ member(t(Xv,Yv),Semi_laghi),
 	Acc1 is Acc +1,
 	lago(t(Xv,Yv),[t(X,Y)|Semi_laghi],Acc1).
 
 head([H|_],H).
 
+
+
+
+
+%#######False minutiae##############�
+
+=======
+	vicino(X/Y,Xv/Yv).
+*/
 %#######False minutiae##############
 /*Predicato che individua le false minutiae dapprima nelle coppie
  * biforcazioni/terminazioni, poi nelle coppie di biforcazioni
@@ -590,6 +604,7 @@ head([H|_],H).
  * sull'impronta disegnata le terminazioni e le biforcazioni
  * rimanenti restituendone il numero.
 */
+>>>>>>> 06a662cf407dcc2f263fe6ce1aa4a3f8b6d4e5bf
 false_minutiae(T,B):-
 	trova_minutiae_biforc_term,
 	trova_minutiae_biforcazioni,
@@ -614,10 +629,17 @@ distanza_minutiae(Xa/Ya,Xb/Yb,Distanza):-
 
 % di seguito mi occorre calcolare la distanza media tra due creste D,
 % che si ottiene riga per riga:
+<<<<<<< HEAD
+% 1-scannerizzando la riga e sommando tutti i pixel il cui valore �
+% 1(neri)
+% 2- Divido la lunghezza della riga per la somma ottenuta, il risultato
+% sar� D per quella riga.
+=======
 % 1-scannerizzando la riga e sommando tutti i pixel il cui valore Ã¨
 % 1(neri)
 % 2- Divido la lunghezza della riga per la somma ottenuta, il risultato
 % sarÃ  D per quella riga.
+>>>>>>> 06a662cf407dcc2f263fe6ce1aa4a3f8b6d4e5bf
 % 3- Ripeto procedimento per tutte le righe e faccio la media per
 % ottenere la distanza media tra due creste D(average inter-rigde
 % width).
@@ -671,7 +693,7 @@ biforcazionecoordinate(X,Y,Bif) :-
 
 
 %%% CALCOLO D %%%%
-% D rappresenta la distanza media tra due creste vicine e parallele.
+% D rappresenta la distanza media tra due creste vicine e parallele. 
 % attraverso un algoritmo, per calcolare D basta:
 % 1-scannerizzando la riga e sommando tutti i pixel il cui valore Ã¨
 % 1(neri)
@@ -683,7 +705,7 @@ biforcazionecoordinate(X,Y,Bif) :-
 % width).
 
 calcolo_D(D) :-
-	calcolo_punti_estremi(Xs,Xd,Yb,Ya),
+	calcolo_punti_estremi(Xs,Xd,Yb,Ya), 
 	somma_riga(Xs,Yb,Xd,Ya,ListaSommaI,ListaXiXf), % restituisce una lista con le somme per ogni riga
 	calcola_lung_riga(ListaXiXf,ListaLunghezzaRiga),
 	NumeroRighe is -(Ya-Yb),
@@ -712,7 +734,7 @@ calcolo_x_sx(X,Xv) :-
 	calcolo_x_sx(X1,Xv),
 	!.
 
-% si parte dal punto piu estremo (302) e si decrementa il valore di X finche non si trova
+% si parte dal punto piu estremo (302) e si decrementa il valore di X finche non si trova 
 % un matching
 calcolo_x_dx(X,X) :-
 	a(X,_,_),
