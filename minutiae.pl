@@ -544,10 +544,16 @@ lag_vicini([],_).
 lag_vicini([H|T],Lag) :-
 	\+ member(H,Lag),
 	lag_vicini(T,Lag).*/
-	
-	
-%#######False minutiae##############à
 
+
+%#######False minutiae##############
+/*Predicato che individua le false minutiae dapprima nelle coppie
+ * biforcazioni/terminazioni, poi nelle coppie di biforcazioni
+ * ed infine nelle coppie di terminazioni.
+ * Effettuata l'eliminazione delle false minuziae evidenzia
+ * sull'impronta disegnata le terminazioni e le biforcazioni
+ * rimanenti restituendone il numero.
+*/
 false_minutiae(T,B):-
 	trova_minutiae_biforc_term,
 	trova_minutiae_biforcazioni,
@@ -555,7 +561,6 @@ false_minutiae(T,B):-
 	terminazioni(T),
 	biforcazioni(B).
 
-%false minutiae
 % innanzitutto ho bisogno di un predicato che calcoli la distanza tra
 % due minutie qualsiasi(due biforcazioni, due terminazioni, una bif
 % una terminazione).
@@ -566,18 +571,10 @@ distanza_minutiae(Xa/Ya,Xb/Yb,Distanza):-
 	YQ is Ydiff^2,
 	Dist is XQ+YQ,
 	Distanza is sqrt(Dist).
-
-% di seguito mi occorre calcolare la distanza media tra due creste D,
-% che si ottiene riga per riga:
-% 1-scannerizzando la riga e sommando tutti i pixel il cui valore è
-% 1(neri)
-% 2- Divido la lunghezza della riga per la somma ottenuta, il risultato
-% sarà D per quella riga.
-% 3- Ripeto procedimento per tutte le righe e faccio la media per
-% ottenere la distanza media tra due creste D(average inter-rigde
-% width).
-%
-% Per ora metto D=6
+/*dopodiché abbiamo creato un predicato che esamini le coppie di
+ * terminazioni ed elimina quelle che distano meno di 6 pixel e
+ * sono quindi catalogate come false minutiae
+ * */
 trova_minutiae_terminazioni :-
 	findall(t(X,Y),trova_false_terminazioni(t(X,Y),t(_,_)),_).
 
