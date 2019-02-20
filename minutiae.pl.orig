@@ -4,7 +4,7 @@
  * Creato:	 14 dicembre 2018
  * Linguaggio:	 SWI Prolog
  * Status:       1.0
- * Descrizione:  funzionalitï¿½ determinare le minuzie all'interno
+ * Descrizione:  funzionalità determinare le minuzie all'interno
  * di una impronta digitale
  */
 
@@ -66,10 +66,20 @@ terminazioni_esterne_sx(X,Y) :-
 	    a(Xv,Y,_),
             Xv < X .
 
+<<<<<<< HEAD
+
+tratti(X1) :-
+	findall(t(X,Y),(terminazione(X,Y,_),tratto(t(X,Y),[],0)),Tratti),
+	length(Tratti,X),
+	X1 is X/2.
+
+
+=======
 trova_tratti(X1) :-
 	findall(t(X,Y),(terminazione(X,Y,_),tratto(t(X,Y),[],0)),Tratti),
 	length(Tratti,X),
 	X1 is X/2.
+>>>>>>> 107630ed03d4aada0b5bd05ebe952ac4ac14e668
 
 tratto(t(X,Y),Tratti,Acc) :-
 	Acc =< 10,
@@ -554,39 +564,103 @@ bif(X, Y, Bif):-
 	Bif = [Ref1,Ref2,Ref3].
 
 laghi(T) :-
-	findall(t(X,Y),(a(X,Y,_),calcolo_vicini(t(X,Y),N),N=3),Partenze),
-	setof(t(X,Y),(member(t(X,Y),Partenze), lago(t(X,Y),[],0)), Laghi),
+	findall(t(X,Y),(a(X,Y,_),calcolo_vicini(t(X,Y),N),N>2),Partenze),
+	%colora_lista_2(Partenze,colour(red)),
+	findall(t(X,Y),(member(t(X,Y),Partenze), lago(t(X,Y),[],0)), Laghi),
         length(Laghi,T).
 
 lago(t(X,Y),Semi_laghi,Acc) :-
-	Acc >9,
+	Acc >3,
+
 	a(X,Y,_),
 	vicino(X/Y,Xv/Yv),
 	a(Xv,Yv,_),
+
 	reverse(Semi_laghi,Inversa),
 	head(Inversa,t(Xt,Yt)),
+	%write(Inversa),nl,
+
 	trova_vicini(t(Xt,Yt),Vicini_testa),
 	member(t(Xv,Yv),Vicini_testa),
-        colora_lista_2(Semi_laghi,colour(red)),
-	true.
+        colora_lista_2(Semi_laghi,colour(red)).
 
 
 lago(t(X,Y),Semi_laghi,Acc) :-
-	Acc =< 300,
+	Acc =< 150,
 	a(X,Y,_),
 	vicino(X/Y,Xv/Yv),
 	a(Xv,Yv,_),
+
 	\+ member(t(Xv,Yv),Semi_laghi),
+
 	Acc1 is Acc +1,
+	%!,
 	lago(t(Xv,Yv),[t(X,Y)|Semi_laghi],Acc1).
+	%send(Ref, colour, colour(red)),
+	%send(Ref, fill_pattern, colour(red)).
+
+/*lago(t(X,Y),Semi_laghi,_) :-
+	a(X,Y,Ref),
+	vicino(X/Y,Xv/Yv),
+	a(Xv,Yv,_).
+	reverse(Semi_laghi,Inversa),
+	head(Inversa,v(Xt,Yt)),
+	Xv= Xt,
+	Yv= Yt,
+	send(Ref, colour, colour(red)),
+       send(Ref, fill_pattern, colour(red)).*/
 
 head([H|_],H).
 
 
 
 
+/*lago(Lag) :-
+	a(X,Y,Ref),
+	append([],[l(X,Y,Ref)],Lag),
+	lag([l(X,Y,Ref)],Lag).
+        %send(Ref,fill_pattern(colour(red))),
+	%send(Ref,colour(colour(red))).
+lag([],_).
+lag([l(X,Y,Ref)|T],Lag) :-
+	findall(l(Xv,Yv,Ref),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),Vicini),
+	(
+	lag_vicini(Vicini,Lag),
+	append(Lag,Vicini,NuovoLag),
+	lag(Vicini,NuovoLag)
+	;
+	send(Ref,colour(colour(green))),
+	send(Ref,fill_pattern(colour(green)))
+	),
+	lag(T,NuovoLag).
 
-%#######False minutiae##############ï¿½
+
+lag_vicini([],_).
+lag_vicini([H|T],Lag) :-
+	\+ member(H,Lag),
+	lag_vicini(T,Lag).*/
+
+/*
+laghi(T) :-
+	findall(Lago, lago(Lago), Laghi),
+	length(Laghi,T).
+
+lago(Lago) :-
+	a(X,Y,_),
+	lag(l(X,Y),[],l(X,Y),Lago).
+
+lag(l(Xi,Yi),Lag,l(X,Y),[l(X,Y)|Lag]) :- s(l(X,Y),l(Xi,Yi)).
+lag(l(Xi,Yi),Lag,l(X,Y),Lago) :-
+	findall(l(Xn,Yn),s(l(X,Y),l(Xn,Yn)),Vicini),
+        member(l(Xv,Yv),Vicini),
+	\+ member(l(Xv,Yv),Lag),
+	lag(l(Xi,Yi),[l(X,Y)|Lag],l(Xv,Yv),Lago).
+
+s(l(X,Y),l(Xv,Yv)) :-
+	a(Xv,Yv,_),
+	vicino(X/Y,Xv/Yv).
+*/
+%#######False minutiae##############à
 
 false_minutiae(T,B):-
 	trova_minutiae_biforc_term,
@@ -609,10 +683,10 @@ distanza_minutiae(Xa/Ya,Xb/Yb,Distanza):-
 
 % di seguito mi occorre calcolare la distanza media tra due creste D,
 % che si ottiene riga per riga:
-% 1-scannerizzando la riga e sommando tutti i pixel il cui valore ï¿½
+% 1-scannerizzando la riga e sommando tutti i pixel il cui valore è
 % 1(neri)
 % 2- Divido la lunghezza della riga per la somma ottenuta, il risultato
-% sarï¿½ D per quella riga.
+% sarà D per quella riga.
 % 3- Ripeto procedimento per tutte le righe e faccio la media per
 % ottenere la distanza media tra due creste D(average inter-rigde
 % width).
