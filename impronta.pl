@@ -22,7 +22,7 @@ disegna_impronta(FileName, Finestra) :- % FileName e Finestra istanziati
 	send(Finestra, open), % apre finestra
 	esamina_bmp(FileName,Stream,DimensioneImmagine,Larghezza),
 	carica_bmp(Finestra,Stream,DimensioneImmagine,Larghezza),
-    correggi_impronta(Finestra),
+        correggi_impronta(Finestra),
 	crea_file('file.txt'). % il file è impostato ad un file di default 'file.txt'
 	%false_minutiae(_,_).
 
@@ -208,6 +208,13 @@ readInt16(IS, Number) :-
     get_byte(IS, B0),
     get_byte(IS, B1),
     Number is B0 + B1<<8.
+
+colora_lista_2([],_).
+colora_lista_2([t(X,Y)|T],Colore):-
+	a(X,Y,Ref),
+	send(Ref,colour(Colore)),
+	send(Ref,fill_pattern(Colore)),
+	colora_lista_2(T,Colore).
 
 colora_lista([],_).
 colora_lista([H|T],Colore) :-

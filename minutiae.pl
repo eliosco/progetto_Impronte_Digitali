@@ -67,17 +67,11 @@ terminazioni_esterne_sx(X,Y) :-
             Xv < X .
 
 
-trova_tratti(X) :-
+tratti(X1) :-
 	findall(t(X,Y),(terminazione(X,Y,_),tratto(t(X,Y),[],0)),Tratti),
-	length(Tratti,X).
+	length(Tratti,X),
+	X1 is X/2.
 
-
-tratti([],_).
-tratti([T|C],Tratti) :-
-
-	tratti(C,[Singolo_tratto|Tratti]),
-
-	tratto(T,Singolo_tratto,0).
 
 
 tratto(t(X,Y),Tratti,Acc) :-
@@ -106,6 +100,10 @@ tratto(t(X,Y),_,_) :-
 calcolo_vicini(t(X,Y),N) :-
 	findall(t(X,Y),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),L),
 	length(L,N).
+
+trova_vicini(t(X,Y),L) :-
+	findall(t(X,Y),(vicino(X/Y,Xv/Yv),a(Xv,Yv,_)),L).
+
 
 tratto_di_2(A,B,C,D,Ref1,Ref2) :-
 	terminazione(A,B,Ref1),
@@ -557,15 +555,63 @@ bif(X, Y, Bif):-
 	a(X8, Y8, Ref2),
 	a(X9, Y9, Ref3),
 	Bif = [Ref1,Ref2,Ref3].
-/*
-laghi(T) :-
-	findall(Lag, lago(Lag), Laghi),
-	length(Laghi,T).
 
-lago(Lag) :-
+laghi(T) :-
+	findall(t(X,Y),(a(X,Y,_),calcolo_vicini(t(X,Y),N),N>2),Partenze),
+	%colora_lista_2(Partenze,colour(red)),
+	findall(t(X,Y),(member(t(X,Y),Partenze), lago(t(X,Y),[],0)), Laghi),
+        length(Laghi,T).
+
+lago(t(X,Y),Semi_laghi,Acc) :-
+	Acc >3,
+
+	a(X,Y,_),
+	vicino(X/Y,Xv/Yv),
+	a(Xv,Yv,_),
+
+	reverse(Semi_laghi,Inversa),
+	head(Inversa,t(Xt,Yt)),
+	%write(Inversa),nl,
+
+	trova_vicini(t(Xt,Yt),Vicini_testa),
+	member(t(Xv,Yv),Vicini_testa),
+        colora_lista_2(Semi_laghi,colour(red)).
+
+
+lago(t(X,Y),Semi_laghi,Acc) :-
+	Acc =< 150,
+	a(X,Y,_),
+	vicino(X/Y,Xv/Yv),
+	a(Xv,Yv,_),
+
+	\+ member(t(Xv,Yv),Semi_laghi),
+
+	Acc1 is Acc +1,
+	%!,
+	lago(t(Xv,Yv),[t(X,Y)|Semi_laghi],Acc1).
+	%send(Ref, colour, colour(red)),
+	%send(Ref, fill_pattern, colour(red)).
+
+/*lago(t(X,Y),Semi_laghi,_) :-
+	a(X,Y,Ref),
+	vicino(X/Y,Xv/Yv),
+	a(Xv,Yv,_).
+	reverse(Semi_laghi,Inversa),
+	head(Inversa,v(Xt,Yt)),
+	Xv= Xt,
+	Yv= Yt,
+	send(Ref, colour, colour(red)),
+       send(Ref, fill_pattern, colour(red)).*/
+
+head([H|_],H).
+
+
+
+
+/*lago(Lag) :-
 	a(X,Y,Ref),
 	append([],[l(X,Y,Ref)],Lag),
-	lag([l(X,Y,Ref)],Lag),
+	lag([l(X,Y,Ref)],Lag).
         %send(Ref,fill_pattern(colour(red))),
 	%send(Ref,colour(colour(red))).
 lag([],_).
