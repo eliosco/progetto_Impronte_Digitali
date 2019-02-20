@@ -577,8 +577,6 @@ lag_vicini([],_).
 lag_vicini([H|T],Lag) :-
 	\+ member(H,Lag),
 	lag_vicini(T,Lag).*/
-<<<<<<< HEAD
-=======
 
 /*
 laghi(T) :-
