@@ -42,7 +42,6 @@ disegna_impronta_da_file(Finestra) :-
 	carica_file,
 	pro(Finestra).
 
->>>>>>> d6832307c3df82f838d9c5fe949c4e7f5bd1ff7f
 
 % consente di caricare il file con i fatti a(X,Y,Ref) che rappresentano
 % l impronta
