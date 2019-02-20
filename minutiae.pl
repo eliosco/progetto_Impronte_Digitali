@@ -4,7 +4,7 @@
  * Creato:	 14 dicembre 2018
  * Linguaggio:	 SWI Prolog
  * Status:       1.0
- * Descrizione:  funzionalità determinare le minuzie all'interno
+ * Descrizione:  funzionalitÃ  determinare le minuzie all'interno
  * di una impronta digitale
  */
 
@@ -600,10 +600,6 @@ s(l(X,Y),l(Xv,Yv)) :-
 	a(Xv,Yv,_),
 	vicino(X/Y,Xv/Yv).
 */
-%#######False minutiae##############à
->>>>>>> d6832307c3df82f838d9c5fe949c4e7f5bd1ff7f
-
-
 %#######False minutiae##############
 /*Predicato che individua le false minutiae dapprima nelle coppie
  * biforcazioni/terminazioni, poi nelle coppie di biforcazioni
@@ -629,25 +625,22 @@ distanza_minutiae(Xa/Ya,Xb/Yb,Distanza):-
 	YQ is Ydiff^2,
 	Dist is XQ+YQ,
 	Distanza is sqrt(Dist).
-<<<<<<< HEAD
-/*dopodich� abbiamo creato un predicato che esamini le coppie di
+/*dopodiché abbiamo creato un predicato che esamini le coppie di
  * terminazioni ed elimina quelle che distano meno di 6 pixel e
  * sono quindi catalogate come false minutiae
  * */
-=======
 
 % di seguito mi occorre calcolare la distanza media tra due creste D,
 % che si ottiene riga per riga:
-% 1-scannerizzando la riga e sommando tutti i pixel il cui valore è
+% 1-scannerizzando la riga e sommando tutti i pixel il cui valore Ã¨
 % 1(neri)
 % 2- Divido la lunghezza della riga per la somma ottenuta, il risultato
-% sarà D per quella riga.
+% sarÃ  D per quella riga.
 % 3- Ripeto procedimento per tutte le righe e faccio la media per
 % ottenere la distanza media tra due creste D(average inter-rigde
 % width).
 %
 % Per ora metto D=6
->>>>>>> d6832307c3df82f838d9c5fe949c4e7f5bd1ff7f
 trova_minutiae_terminazioni :-
 	findall(t(X,Y),trova_false_terminazioni(t(X,Y),t(_,_)),_).
 
@@ -698,11 +691,11 @@ biforcazionecoordinate(X,Y,Bif) :-
 %%% CALCOLO D %%%%
 % D rappresenta la distanza media tra due creste vicine e parallele. 
 % attraverso un algoritmo, per calcolare D basta:
-% 1-scannerizzando la riga e sommando tutti i pixel il cui valore è
+% 1-scannerizzando la riga e sommando tutti i pixel il cui valore Ã¨
 % 1(neri)
 % 2- Divido la lunghezza della riga per la somma ottenuta, il risultato
-% sarà D per quella riga.
-% per la lunghezza della riga è stata considerata la distanza tra il primo pixel nero che si trova nella riga e l ultimo
+% sarÃ  D per quella riga.
+% per la lunghezza della riga Ã¨ stata considerata la distanza tra il primo pixel nero che si trova nella riga e l ultimo
 % 3- Ripeto procedimento per tutte le righe e faccio la media per
 % ottenere la distanza media tra due creste D(average inter-rigde
 % width).
@@ -720,9 +713,9 @@ calcolo_D(D) :-
 % serve per definire lo spazio dell immagine in cui si trova l impronta
 calcolo_punti_estremi(XS,XD,YB,YA) :-
 	calcolo_x_sx(0,XS),
-	calcolo_x_dx(302,XD), % 302 è la lunghezza massima dell impronta
+	calcolo_x_dx(302,XD), % 302 Ã¨ la lunghezza massima dell impronta
 	calcolo_y_bs(0,YB),
-	calcolo_y_al(-393,YA), % -393 è l altezza massima dell impronta
+	calcolo_y_al(-393,YA), % -393 Ã¨ l altezza massima dell impronta
 	!.
 
 % parto da un X=0, tento a(0,_,_), se matcha redtituisce X=0, se non
@@ -770,9 +763,9 @@ calcolo_y_al(Y,Yv) :-
 
 
 % calcola la lunghezza di ogni riga a partire da una lista formata da
-% elementi Xi/Xf dove sono rispettivamente il primo X in cui si è avuto
+% elementi Xi/Xf dove sono rispettivamente il primo X in cui si Ã¨ avuto
 % un matching con una certa a(X,_,_) e l ultimo X
-% quindi si calcola la lunghezza della riga che è la differenza tra Xf e
+% quindi si calcola la lunghezza della riga che Ã¨ la differenza tra Xf e
 % Xi e la si restituisce in una lista che andra a contenere tutte le
 % lunghezze delle righe
 calcola_lung_riga([],[]) :-
@@ -786,7 +779,7 @@ calcola_lung_riga([Xi/Xf|C],[Lung|C1]) :-
 % divide la lunghezza di ogni riga per la somma dei pixel neri di quella
 % riga e restituisce una lista formata da queste divisioni, una per ogni
 % riga
-% la lunghezza di ogni riga è una lista di lunghezze
+% la lunghezza di ogni riga Ã¨ una lista di lunghezze
 dividi_D([],[],[]) :-
 	!.
 dividi_D([0|C2],[0|C],[0|C1]) :-
@@ -807,8 +800,8 @@ somma_li([T|C],S) :-
 
 % scorre tutte le righe dell impronta, restituendo una lista con le
 % somme dei pixel neri per ogni riga
-% inoltre restituisce una lista del tipo Xi/Xf in cui Xi è il primo X
-% con il pixel nero della riga e Xf è l ultimo
+% inoltre restituisce una lista del tipo Xi/Xf in cui Xi Ã¨ il primo X
+% con il pixel nero della riga e Xf Ã¨ l ultimo
 somma_riga(X,Y,_,Ya,[],[]) :-
 	\+ a(X,Y,_),
 	Y < Ya,
@@ -830,7 +823,7 @@ prendi_primo(T,[T|_]) :-
 
 
 % prende l ultimo elemento di una lista
-% nel caso in cui la lista è vuota, assegna 0 all elemento
+% nel caso in cui la lista Ã¨ vuota, assegna 0 all elemento
 prendi_ultimo(0,[]) :-
 	!.
 prendi_ultimo(T,[T]):-
@@ -839,13 +832,13 @@ prendi_ultimo(X,[_|C]) :-
         prendi_ultimo(X,C).
 
 
-% prende cordinate X Y, se il pixel corrispondente è a 1 allora
+% prende cordinate X Y, se il pixel corrispondente Ã¨ a 1 allora
 % incrementa il valore della somma
-% altrimenti se il pixel è a 0 e la X è <= Xd, ovvero la lunghezza dell
+% altrimenti se il pixel Ã¨ a 0 e la X Ã¨ <= Xd, ovvero la lunghezza dell
 % impronta allora si prosegue nella ricerca del prossimo pixel,
 % altrimenti se X > Xd si restituisce la somma per passare alla riga
 % successiva
-% dove Xd è la X piu estrema di destra = 281
+% dove Xd Ã¨ la X piu estrema di destra = 281
 uno_riga(X1,Y,Xd,0,[]) :-
 	\+ a(X1,Y,_),
 	X1 > Xd,
